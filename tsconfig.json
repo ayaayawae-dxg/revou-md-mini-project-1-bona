@@ -6,6 +6,9 @@
       "@components/*": ["components/*"],
       "@constant": ["constant"],
       "@assets/*": ["assets/*"],
+      "@screens": ["screens"],
+      "@navigation": ["navigation"],
+      "@utils/*": ["utils/*"]
     }
   }
 }

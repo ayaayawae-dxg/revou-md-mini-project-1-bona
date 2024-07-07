@@ -13,7 +13,7 @@ type ButtonProps = {
   size?: 'large' | 'medium' | 'small';
   variant?: 'primary' | 'outline' | 'tertiary' | 'link';
   children: React.ReactNode;
-  style?: TextStyle;
+  style?: TextStyle | TextStyle[];
   icon?: React.ReactElement;
   onPress?: () => void
 };
@@ -26,6 +26,7 @@ const Button: React.FC<ButtonProps> = ({
   children,
   icon,
   onPress,
+  style
 }) => {
   const getTextSize = () => {
     return size === 'large' ? 'medium' : size === 'medium' ? 'small' : 'xsmall';
@@ -81,6 +82,7 @@ const Button: React.FC<ButtonProps> = ({
         getStyleBySizeAndVariant(),
         getStyleByVariantAndDisabled(),
         getStyleByType(),
+        style
       ]}>
       {type === 'icon-only' ? (
         <>
