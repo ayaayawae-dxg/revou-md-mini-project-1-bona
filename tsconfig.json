@@ -4,7 +4,8 @@
     "baseUrl": "./src",
     "paths": {
       "@components/*": ["components/*"],
-      "@constant/*": ["constant/*"],
+      "@constant": ["constant"],
+      "@assets/*": ["assets/*"],
     }
   }
 }

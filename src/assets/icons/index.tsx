@@ -1,0 +1,1 @@
+export { default as HeartIcon } from '@assets/icons/heart.svg'
