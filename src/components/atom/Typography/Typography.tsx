@@ -13,7 +13,7 @@ type TypographyProps = {
     | 'xsmall'
     | 'xxsmall';
   children: React.ReactNode;
-  style?: TextStyle | TextStyle[]
+  style?: TextStyle
 };
 
 const Typography: React.FC<TypographyProps> = ({

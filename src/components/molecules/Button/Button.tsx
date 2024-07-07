@@ -92,7 +92,7 @@ const Button: React.FC<ButtonProps> = ({
           <Typography
             type="heading"
             size={getTextSize()}
-            style={[{ paddingHorizontal: 8 }, getTextStyleByVariantAndDisabled()]}>
+            style={{ paddingHorizontal: 8, ...getTextStyleByVariantAndDisabled() }}>
             {children}
           </Typography>
           {type === 'icon-right' && Icon}

@@ -1,14 +1,14 @@
 import React from 'react';
-import { Alert, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Icon, Typography } from '@components/atom';
-import { Button } from '@components/molecules';
+import { Button, TextField } from '@components/molecules';
 import { COLORS } from '@constant';
 import { HeartIcon } from '@assets/icons';
 
 const App: React.FC = () => {
   return (
-    <SafeAreaView>
-      <View style={{ padding: 16 }}>
+    <ScrollView>
+      <SafeAreaView style={{ padding: 16 }}>
 
         <Typography>dss21323s</Typography>
         <Typography>dss21323s</Typography>
@@ -67,8 +67,14 @@ const App: React.FC = () => {
           icon={<Icon name="heart" />}>
           Icon right
         </Button>
-      </View>
-    </SafeAreaView>
+
+        <TextField placeholder='test Placeholder' />
+        <TextField state='positive' label='positive Field' />
+        <TextField state='disabled' label='disabled Field' />
+        <TextField state='negative' label='negative Field' />
+        <TextField type='password' label='password' />
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 

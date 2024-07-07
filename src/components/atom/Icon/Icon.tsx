@@ -2,13 +2,15 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import React from 'react';
 
-import { HeartIcon } from '@assets/icons';
+import { EyeIcon, EyeSlashIcon, HeartIcon } from '@assets/icons';
 import { COLORS } from '@constant';
 
-type IconName = 'heart';
+type IconName = 'heart' | 'eye' | 'eye-slash';
 
 const IconMap: Record<IconName, React.FC<SvgProps>> = {
   heart: HeartIcon,
+  eye: EyeIcon,
+  'eye-slash': EyeSlashIcon,
 };
 
 type IconProps = {
