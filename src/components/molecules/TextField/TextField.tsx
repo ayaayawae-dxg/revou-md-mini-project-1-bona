@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center'
   },
 
   inputTextContainerDefault: {
