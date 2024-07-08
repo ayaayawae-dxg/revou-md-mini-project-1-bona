@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -53,13 +52,15 @@ const TextField: React.FC<TextFieldProps> = ({
   };
 
   return (
-    <View>
-      <Typography
-        type="heading"
-        size="small"
-        style={{ ...styles.label, ...getTextStyleByState() }}>
-        {label}
-      </Typography>
+    <View >
+      {state !== 'default-no-label' && (
+        <Typography
+          type="heading"
+          size="small"
+          style={{ ...styles.label, ...getTextStyleByState() }}>
+          {label}
+        </Typography>
+      )}
       <View style={[styles.inputTextContainer, getStyleByState()]}>
         <TextInput
           secureTextEntry={type === 'password' && isVisible === false}
@@ -104,7 +105,8 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: 40
   },
 
   inputTextContainerDefault: {

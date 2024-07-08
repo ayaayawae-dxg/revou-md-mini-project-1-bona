@@ -8,10 +8,23 @@ import {
   EyeSlashIcon,
   HeartIcon,
   InvestlyIcon,
+  InvestlyFullIcon,
+  BellIcon,
+  PlusIcon,
+  QuestionIcon,
 } from '@assets/icons';
 import { COLORS } from '@constant';
 
-type IconName = 'heart' | 'eye' | 'eye-slash' | 'chevron-left' | 'investly';
+type IconName =
+  | 'heart'
+  | 'eye'
+  | 'eye-slash'
+  | 'chevron-left'
+  | 'investly'
+  | 'investly-full'
+  | 'bell'
+  | 'plus'
+  | 'question';
 
 const IconMap: Record<IconName, React.FC<SvgProps>> = {
   heart: HeartIcon,
@@ -19,6 +32,10 @@ const IconMap: Record<IconName, React.FC<SvgProps>> = {
   'eye-slash': EyeSlashIcon,
   'chevron-left': ChevronLeftIcon,
   investly: InvestlyIcon,
+  'investly-full': InvestlyFullIcon,
+  bell: BellIcon,
+  plus: PlusIcon,
+  question: QuestionIcon,
 };
 
 type IconProps = {
