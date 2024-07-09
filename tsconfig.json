@@ -9,6 +9,6 @@
       "@screens": ["screens"],
       "@navigation": ["navigation"],
       "@utils/*": ["utils/*"]
-    }
+    },
   }
 }

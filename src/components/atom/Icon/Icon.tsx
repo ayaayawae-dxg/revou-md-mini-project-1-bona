@@ -12,10 +12,15 @@ import {
   BellIcon,
   PlusIcon,
   QuestionIcon,
+  EllipsisIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  CommentIcon,
+  RetweetIcon,
 } from '@assets/icons';
 import { COLORS } from '@constant';
 
-type IconName =
+export type IconName =
   | 'heart'
   | 'eye'
   | 'eye-slash'
@@ -24,7 +29,12 @@ type IconName =
   | 'investly-full'
   | 'bell'
   | 'plus'
-  | 'question';
+  | 'question'
+  | 'ellipsis'
+  | 'arrow-up'
+  | 'arrow-down'
+  | 'comment'
+  | 'retweet';
 
 const IconMap: Record<IconName, React.FC<SvgProps>> = {
   heart: HeartIcon,
@@ -36,6 +46,11 @@ const IconMap: Record<IconName, React.FC<SvgProps>> = {
   bell: BellIcon,
   plus: PlusIcon,
   question: QuestionIcon,
+  ellipsis: EllipsisIcon,
+  'arrow-up': ArrowUpIcon,
+  'arrow-down': ArrowDownIcon,
+  'comment': CommentIcon,
+  'retweet': RetweetIcon,
 };
 
 type IconProps = {

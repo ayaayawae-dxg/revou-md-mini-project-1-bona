@@ -8,7 +8,6 @@ import {
   OnboardingInvestLogo,
   OnboardingLearnLogo,
 } from '@assets/images';
-import { COLORS } from '@constant';
 import { getScreenWidth } from '@utils/screen';
 import { Typography } from '@components/atom';
 

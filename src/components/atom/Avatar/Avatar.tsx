@@ -9,14 +9,19 @@ type AvatarProps = {
 };
 
 const Avatar: React.FC<AvatarProps> = ({
-  source = AvatarImage,
+  source,
   size = 'medium',
 }) => {
   const getSize = () => {
     return styles[size];
   };
 
-  return <Image source={source} style={[styles.image, getSize()]} />;
+  return (
+    <Image
+      source={source ? { uri: source.toString() } : AvatarImage}
+      style={[styles.image, getSize()]}
+    />
+  );
 };
 
 export default Avatar;

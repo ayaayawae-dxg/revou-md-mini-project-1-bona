@@ -1,32 +1,37 @@
-import { StyleSheet, Text, TextStyle, View } from 'react-native';
+import { StyleSheet, Text, TextProps, TextStyle, View } from 'react-native';
 import React from 'react';
 import { COLORS, FONT_SIZE } from '@constant';
 
 type TypographyProps = {
   type?: 'heading' | 'paragraph' | 'special';
   size?:
-    | 'xxlarge'
-    | 'xlarge'
-    | 'large'
-    | 'medium'
-    | 'small'
-    | 'xsmall'
-    | 'xxsmall';
+  | 'xxlarge'
+  | 'xlarge'
+  | 'large'
+  | 'medium'
+  | 'small'
+  | 'xsmall'
+  | 'xxsmall';
   children: React.ReactNode;
-  style?: TextStyle | TextStyle[]
+  style?: TextStyle;
 };
 
-const Typography: React.FC<TypographyProps> = ({
+const Typography: React.FC<TypographyProps & TextProps> = ({
   type = 'paragraph',
   size = 'medium',
   children,
   style,
+  ...rest
 }) => {
   const getStyleByTypeAndSize = () => {
     return styles[`${type}-${size}`];
   };
 
-  return <Text style={[getStyleByTypeAndSize(), style]}>{children}</Text>;
+  return (
+    <Text style={[getStyleByTypeAndSize(), style]} {...rest}>
+      {children}
+    </Text>
+  );
 };
 
 export default Typography;
