@@ -1,4 +1,5 @@
 type FeedProps = {
+  id: string;
   avatar_url: string;
   name: string;
   headline?: string | null;

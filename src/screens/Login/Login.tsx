@@ -47,7 +47,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       <Button
         style={styles['button-login']}
         onPress={() => {
-          navigation.navigate('HomeTab');
+          navigation.navigate('Main');
         }}>
         Masuk
       </Button>

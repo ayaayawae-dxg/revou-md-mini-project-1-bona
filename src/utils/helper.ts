@@ -4,6 +4,7 @@ export const generateHomeData = () => {
   const totalData = 5;
 
   const data = Array.from({ length: totalData }).map((v, idx) => ({
+    id: faker.string.uuid(),
     avatar_url: faker.image.avatar(),
     name: faker.person.fullName(),
     headline: faker.datatype.boolean() ? faker.person.jobTitle() : null,

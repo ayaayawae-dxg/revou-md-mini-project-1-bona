@@ -12,8 +12,9 @@ const HomeTrending = () => {
     <View style={styles.container}>
       <FlatList
         data={data}
+        keyExtractor={(item, index) => item.id}
         renderItem={({ item }) => {
-          return <Feed {...item} />;
+          return <Feed key={item.id} {...item} />;
         }}
         ListFooterComponent={<FeedEndContent />}
       />

@@ -1,23 +1,11 @@
 import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { Home, Login, Onboarding, Profile } from '@screens';
-import { Appbar } from '@components/molecules';
+import { Login, Main, Onboarding } from '@screens';
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-
-const HomeTab = () => {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name='Home' component={Home} options={{ header: Appbar }} />
-      <Tab.Screen name='Profile' component={Profile} />
-    </Tab.Navigator>
-  )
-}
 
 const AppNavigation = () => {
   return (
@@ -25,7 +13,7 @@ const AppNavigation = () => {
       <Stack.Navigator>
         {/* <Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} /> */}
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-        <Stack.Screen name="HomeTab" component={HomeTab} options={{ headerShown: false }} />
+        <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -34,5 +22,5 @@ const AppNavigation = () => {
 export default AppNavigation
 
 const styles = StyleSheet.create({
-  
+
 })

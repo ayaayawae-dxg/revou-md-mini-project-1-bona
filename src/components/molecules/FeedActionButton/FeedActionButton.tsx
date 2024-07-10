@@ -17,7 +17,7 @@ const FeedActionButton: React.FC<FeedActionButtonProps> = ({ data }) => {
   return (
     <View style={styles['item-footer-action']}>
       {data.map((item, index) => (
-        <>
+        <React.Fragment key={index}>
           {index > 0 && <View style={styles.divider}></View>}
 
           <View key={index} style={styles['item-footer-action-button']}>
@@ -29,7 +29,7 @@ const FeedActionButton: React.FC<FeedActionButtonProps> = ({ data }) => {
             />
             <Typography size="small">{item.count}</Typography>
           </View>
-        </>
+        </React.Fragment>
       ))}
     </View>
   );
