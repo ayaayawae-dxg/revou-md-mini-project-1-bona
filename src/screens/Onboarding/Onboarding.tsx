@@ -1,5 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
-import { SvgProps } from 'react-native-svg';
+import { FlatList, Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 
 import { Button } from '@components/molecules';
@@ -16,7 +15,7 @@ type OnboardingProps = {
 };
 
 type StepProps = {
-  image: React.FC<SvgProps>;
+  image: ImageSourcePropType;
   title: string;
   description: string;
 };
@@ -51,7 +50,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ navigation }) => {
     return (
       <View style={styles['item-container']}>
         <View>
-          <item.image />
+          <Image source={item.image}/>
         </View>
         <View style={styles.content}>
           <Typography
