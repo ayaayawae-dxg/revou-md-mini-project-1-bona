@@ -1,10 +1,14 @@
 import {
+  NativeSyntheticEvent,
   StyleSheet,
   TextInput,
+  TextInputFocusEventData,
+  TextInputProps,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useState } from 'react';
+
 import { Icon, Typography } from '@components/atom';
 import { COLORS, FONT_SIZE } from '@constant';
 
@@ -16,12 +20,15 @@ type TextFieldProps = {
   message?: string;
 };
 
-const TextField: React.FC<TextFieldProps> = ({
+const TextField: React.FC<TextFieldProps & TextInputProps> = ({
   state = 'default',
   type = 'text',
   placeholder = 'Placeholder',
   label = 'Label',
   message = 'message',
+  onBlur,
+  onChangeText,
+  value
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -52,7 +59,7 @@ const TextField: React.FC<TextFieldProps> = ({
   };
 
   return (
-    <View >
+    <View>
       {state !== 'default-no-label' && (
         <Typography
           type="heading"
@@ -69,7 +76,12 @@ const TextField: React.FC<TextFieldProps> = ({
           placeholder={placeholder}
           style={[styles.inputText]}
           onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onBlur={() => {
+            if (onBlur) (e: NativeSyntheticEvent<TextInputFocusEventData>) => onBlur(e)
+            setIsFocused(false)
+          }}
+          onChangeText={onChangeText}
+          value={value}
         />
         {type === 'password' && (
           <TouchableOpacity onPress={() => setIsVisible(prev => !prev)}>
@@ -89,8 +101,8 @@ const TextField: React.FC<TextFieldProps> = ({
 export default TextField;
 
 const styles = StyleSheet.create({
-  message: { color: COLORS.red500 },
-  label: { paddingBottom: 8 },
+  message: { color: COLORS.red500, marginTop: 8 },
+  label: { marginBottom: 8 },
   inputText: {
     padding: 0,
     fontSize: FONT_SIZE.paragraphMedium,

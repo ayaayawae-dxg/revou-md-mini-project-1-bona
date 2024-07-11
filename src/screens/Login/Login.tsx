@@ -1,5 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
+import { z, ZodType } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
@@ -9,7 +12,80 @@ type LoginProps = {
   navigation: any;
 };
 
+type FormData = {
+  email: string;
+  password: string;
+};
+
+const loginSchema: ZodType<FormData> = z.object({
+  email: z
+    .string()
+    .min(1, 'Email harus diisi')
+    .trim()
+    .max(254)
+    .regex(
+      /^[^\s()<>[\],;:"\\']+$/,
+      `Email tidak boleh mengandung karakter spesial ( ) < > , ; : " [ ] '`,
+    )
+    .email('Format email tidak sesuai')
+    .toLowerCase(),
+  password: z
+    .string()
+    .min(1, 'Password harus diisi')
+    .min(8, 'Password harus mengandung minimal 8 karakter')
+    .max(64, 'Password harus mengandung maksimal 64 karakter')
+    .regex(/[A-Z]/, 'Password harus mengandung huruf besar')
+    .regex(/[a-z]/, 'Password harus mengandung huruf kecil')
+    .regex(/[0-9]/, 'Password harus mengandung angka')
+    .regex(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      'Password harus mengandung karakter spesial',
+    ),
+});
+
 const Login: React.FC<LoginProps> = ({ navigation }) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid, dirtyFields },
+  } = useForm<FormData>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'all',
+    resolver: zodResolver(loginSchema),
+  });
+
+  const validateLogin = (data: FormData) => {
+    const validEmail = 'bona@test.app';
+    const validPassword = 'TestApp123!';
+    if (data.email === validEmail && data.password === validPassword) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const onSubmit = (data: FormData) => {
+    const isValid = validateLogin(data);
+    if (!isValid) {
+      return Alert.alert('Login gagal', 'Email atau password salah');
+    }
+
+    navigation.navigate('Main');
+  };
+
+  const getInputState = (name: keyof FormData) => {
+    if (errors[name]) {
+      return 'negative';
+    }
+
+    if (dirtyFields[name]) {
+      return 'positive';
+    }
+  };
+
   return (
     <View style={styles['container']}>
       <View>
@@ -30,11 +106,39 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       </View>
 
       <View style={styles.form}>
-        <TextField placeholder="Email" label="Email" />
-        <TextField
-          placeholder="Masukkan password"
-          label="Password"
-          type="password"
+        <Controller
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextField
+              state={getInputState('email')}
+              placeholder="Email"
+              label="Email"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              message={errors.email?.message}
+            />
+          )}
+          name="email"
+        />
+
+        <Controller
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextField
+              state={getInputState('password')}
+              placeholder="Masukkan password"
+              label="Password"
+              type="password"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              message={errors.password?.message}
+            />
+          )}
+          name="password"
         />
       </View>
 
@@ -46,9 +150,8 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
       <Button
         style={styles['button-login']}
-        onPress={() => {
-          navigation.navigate('Main');
-        }}>
+        disabled={!isValid}
+        onPress={handleSubmit(onSubmit)}>
         Masuk
       </Button>
     </View>
@@ -82,10 +185,14 @@ const styles = StyleSheet.create({
   'forgot-password': {
     alignItems: 'flex-start',
     marginTop: 16,
-    marginLeft: 24,
+    marginHorizontal: 24,
   },
   'button-login': {
     marginHorizontal: 20,
     marginBottom: 44,
+  },
+  'error-message': {
+    color: COLORS.red500,
+    marginTop: 8,
   },
 });
