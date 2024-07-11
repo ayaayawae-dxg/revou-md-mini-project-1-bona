@@ -1,14 +1,22 @@
-import { FlatList, Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  Image,
+  ImageSourcePropType,
+  NativeScrollEvent,
+  StyleSheet,
+  View,
+} from 'react-native';
 import React, { useRef, useState } from 'react';
 
 import { Button } from '@components/molecules';
+import { Dots, Typography } from '@components/atom';
 import {
   OnboardingConnectLogo,
   OnboardingInvestLogo,
   OnboardingLearnLogo,
 } from '@assets/images';
 import { getScreenWidth } from '@utils/screen';
-import { Typography } from '@components/atom';
+import { COLORS } from '@constant';
 
 type OnboardingProps = {
   navigation: any;
@@ -41,59 +49,74 @@ const STEPS: StepProps[] = [
   },
 ];
 
-const Onboarding: React.FC<OnboardingProps> = ({ navigation }) => {
-  const ref = useRef<FlatList>(null)
-  const [currentStep, setCurrentStep] = useState<number>(0);
-  const isLastStep = currentStep === STEPS.length - 1
-
-  const renderItem = ({ item }: { item: StepProps }) => {
-    return (
-      <View style={styles['item-container']}>
-        <View>
-          <Image source={item.image}/>
-        </View>
-        <View style={styles.content}>
-          <Typography
-            type="heading"
-            size="xlarge"
-            style={styles['content-title']}>
-            {item.title}
-          </Typography>
-          <Typography style={styles['content-description']}>
-            {item.description}
-          </Typography>
-        </View>
+const renderItem = ({ item }: { item: StepProps }) => {
+  return (
+    <View style={styles['item-container']}>
+      <View>
+        <Image source={item.image} />
       </View>
-    );
-  };
+      <View style={styles.content}>
+        <Typography
+          type="heading"
+          size="xlarge"
+          style={styles['content-title']}>
+          {item.title}
+        </Typography>
+        <Typography style={styles['content-description']}>
+          {item.description}
+        </Typography>
+      </View>
+    </View>
+  );
+};
+
+const Onboarding: React.FC<OnboardingProps> = ({ navigation }) => {
+  const ref = useRef<FlatList>(null);
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  const isLastStep = currentStep === STEPS.length - 1;
 
   const onNext = () => {
     if (isLastStep) {
       return navigation.navigate('Login');
     }
 
-    const nextStep = currentStep + 1
-    ref.current?.scrollToIndex({ index: nextStep, animated: false })
-    setCurrentStep(nextStep)
+    const nextStep = currentStep + 1;
+    ref.current?.scrollToIndex({ index: nextStep, animated: true });
+    setCurrentStep(nextStep);
+  };
+
+  const onScroll = ({ nativeEvent }: { nativeEvent: NativeScrollEvent }) => {
+    const page = Math.round(nativeEvent.contentOffset.x / getScreenWidth());
+    setCurrentStep(page);
   };
 
   const getButtonTextByStep = () => {
     if (isLastStep) {
-      return "Get Started"
+      return 'Get Started';
     }
-    return "Next"
-  }
+    return 'Next';
+  };
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={STEPS}
-        renderItem={renderItem}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
-        ref={ref}
-      />
+      <View style={styles.flex}></View>
+      <View style={styles.body}>
+        <FlatList
+          data={STEPS}
+          renderItem={renderItem}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+          ref={ref}
+          onMomentumScrollEnd={onScroll}
+        />
+        <View style={styles.dots}>
+          {Array.from(Array(STEPS.length).keys()).map((item) => (
+            <Dots key={item} active={currentStep === item} />
+          ))}
+        </View>
+      </View>
+      <View style={styles.flex}></View>
       <Button style={styles.button} onPress={onNext}>
         {getButtonTextByStep()}
       </Button>
@@ -104,7 +127,12 @@ const Onboarding: React.FC<OnboardingProps> = ({ navigation }) => {
 export default Onboarding;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingBottom: 44 },
+  container: { flex: 1, backgroundColor: COLORS.neutral100, justifyContent: 'center' },
+  body: {
+    alignItems: 'center',
+    gap: 24,
+    marginTop: 42
+  },
   flex: { flex: 1 },
   'item-container': {
     width: getScreenWidth(),
@@ -129,5 +157,10 @@ const styles = StyleSheet.create({
   },
   button: {
     marginHorizontal: 20,
+    marginBottom: 44,
   },
+  dots: {
+    flexDirection: 'row',
+    gap: 4
+  }
 });
