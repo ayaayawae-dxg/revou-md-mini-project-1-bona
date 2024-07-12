@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -86,18 +86,24 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     }
   };
 
+  const onBack = () => navigation.goBack()
+
+  const onLewati = () => navigation.navigate('Main')
+
   return (
     <View style={styles['container']}>
       <View>
         <View style={styles['header-action']}>
           <View style={styles['header-action-left']}>
-            <Icon name="chevron-left" width={20} height={20} />
+            <TouchableOpacity onPress={onBack}>
+              <Icon name="chevron-left" width={20} height={20} />
+            </TouchableOpacity>
           </View>
           <View style={styles['header-action-middle']}>
             <Icon name="investly" />
           </View>
           <View style={styles['header-action-right']}>
-            <Button variant="link">Lewati</Button>
+            <Button variant="link" onPress={onLewati}>Lewati</Button>
           </View>
         </View>
         <Typography style={styles['header-title']} type="heading" size="large">
