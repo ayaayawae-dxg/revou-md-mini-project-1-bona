@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import { COLORS } from '@constant';
 import { HomeTab, PostFeed } from '@components/molecules';
 import { HomeNew, HomeTrending } from '@screens';
+import { generateHomeData } from '@utils/helper';
+import { useFeed } from '@hooks';
 
 const Tab = createMaterialTopTabNavigator();
 
 const Home = () => {
+  const { feedData, setFeedData } = useFeed();
+
+  useEffect(() => {
+    setFeedData(generateHomeData());
+  }, []);
+
   return (
     <View style={styles['container']}>
       <PostFeed />

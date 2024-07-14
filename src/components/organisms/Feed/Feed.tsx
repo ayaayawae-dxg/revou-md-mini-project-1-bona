@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Avatar, Icon, Label, Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { FeedActionButton } from '@components/molecules';
+import moment from 'moment';
 
 const Feed: React.FC<FeedProps> = feed => {
   return (
@@ -19,7 +20,9 @@ const Feed: React.FC<FeedProps> = feed => {
           {feed.headline && (
             <Typography size="small">{feed.headline}</Typography>
           )}
-          <Typography size="xsmall">{feed.created_at.toUTCString()}</Typography>
+          <Typography size="xsmall">
+            {moment(feed.created_at).startOf('minute').fromNow()}
+          </Typography>
         </View>
         <Icon name="ellipsis" width={16} height={16} />
       </View>

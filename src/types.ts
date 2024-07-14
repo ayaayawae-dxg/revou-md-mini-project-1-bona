@@ -11,3 +11,8 @@ type FeedProps = {
   post_downvote: number;
   post_comment: number;
 };
+
+type UserAuthProps = {
+  avatar_url: string;
+  email: string;
+}
