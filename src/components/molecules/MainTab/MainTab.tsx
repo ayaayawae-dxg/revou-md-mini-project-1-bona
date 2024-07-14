@@ -117,11 +117,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     height: 89,
-    borderWidth: 1,
-    backgroundColor: COLORS.neutral100
+    backgroundColor: COLORS.neutral100,
+    borderTopColor: COLORS.neutral300,
+    borderTopWidth: 1,
   },
   tab: {
-    borderWidth:1,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
