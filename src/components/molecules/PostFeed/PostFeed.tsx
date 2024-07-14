@@ -1,16 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
 
-import { COLORS } from '@constant'
-import { Avatar, Icon, Typography } from '@components/atom'
-import { TextField } from '@components/molecules'
+import { COLORS } from '@constant';
+import { Avatar, Icon, Typography } from '@components/atom';
+import { TextField } from '@components/molecules';
+import { useAuth } from '@hooks';
 
 const PostFeed = () => {
+  const { user } = useAuth();
+
   return (
     <View style={styles['post-feed-container']}>
       <View style={styles['post-feed-card']}>
         <View style={styles['post-feed-card-header']}>
-          <Avatar size="large" />
+          <Avatar size="large" source={user ? user.avatar_url : null} />
           <View style={styles['input-wrapper']}>
             <TextField
               state="default-no-label"
@@ -43,10 +46,10 @@ const PostFeed = () => {
         </View>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default PostFeed
+export default PostFeed;
 
 const styles = StyleSheet.create({
   'post-feed-container': {
@@ -83,4 +86,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.neutral300,
   },
-})
+});

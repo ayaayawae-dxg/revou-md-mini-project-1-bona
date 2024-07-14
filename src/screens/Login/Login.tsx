@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,6 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
+import { useAuth } from '@hooks';
+import { RevouLogo } from '@assets/images';
 
 type LoginProps = {
   navigation: any;
@@ -44,6 +46,7 @@ const loginSchema: ZodType<FormData> = z.object({
 });
 
 const Login: React.FC<LoginProps> = ({ navigation }) => {
+  const { setUser } = useAuth();
   const {
     control,
     handleSubmit,
@@ -73,6 +76,10 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       return Alert.alert('Login gagal', 'Email atau password salah');
     }
 
+    setUser({
+      avatar_url: Image.resolveAssetSource(RevouLogo).uri,
+      email: data.email,
+    });
     navigation.navigate('Main');
   };
 
@@ -86,9 +93,9 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     }
   };
 
-  const onBack = () => navigation.goBack()
+  const onBack = () => navigation.goBack();
 
-  const onLewati = () => navigation.navigate('Main')
+  const onLewati = () => navigation.navigate('Main');
 
   return (
     <View style={styles['container']}>
@@ -103,7 +110,9 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
             <Icon name="investly" />
           </View>
           <View style={styles['header-action-right']}>
-            <Button variant="link" onPress={onLewati}>Lewati</Button>
+            <Button variant="link" onPress={onLewati}>
+              Lewati
+            </Button>
           </View>
         </View>
         <Typography style={styles['header-title']} type="heading" size="large">

@@ -4,7 +4,7 @@ import React from 'react';
 import { AvatarImage } from '@assets/images';
 
 type AvatarProps = {
-  source?: string;
+  source?: string | null;
   size?: 'xxlarge' | 'xlarge' | 'large' | 'medium' | 'small' | 'xsmall';
 };
 
