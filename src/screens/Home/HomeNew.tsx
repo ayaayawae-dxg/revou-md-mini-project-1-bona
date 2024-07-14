@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 import { Feed } from '@components/organisms';
@@ -18,11 +18,11 @@ const HomeNew = () => {
     setNewData(mostRecent);
   };
 
-  const onRefresh = () => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true)
     setFeedData(generateHomeData());
     setRefreshing(false)
-  }
+  }, []);
 
   useEffect(() => {
     if (feedData) {
@@ -46,7 +46,7 @@ const HomeNew = () => {
   );
 };
 
-export default HomeNew;
+export default memo(HomeNew);
 
 const styles = StyleSheet.create({
   container: {

@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { memo } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -8,10 +8,25 @@ import { Avatar, Icon, Typography } from '@components/atom';
 import { TextField } from '@components/molecules';
 import { useAuth } from '@hooks';
 import { redirectOnUnauthorized } from '@utils/helper';
+import { Controller, useForm } from 'react-hook-form';
+
+type FormData = {
+  notes: string;
+};
 
 const PostFeed = () => {
   const { user } = useAuth();
   const navigation: NativeStackNavigationProp<RootStackParamList> = useNavigation();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid, dirtyFields },
+  } = useForm<FormData>({
+    defaultValues: {
+      notes: '',
+    },
+    mode: 'all',
+  });
 
   const onPressText = () => {
     const isAllowed = redirectOnUnauthorized(user, navigation)
@@ -34,11 +49,22 @@ const PostFeed = () => {
         <View style={styles['post-feed-card-header']}>
           <Avatar size="large" source={user ? user.avatar_url : null} />
           <TouchableOpacity style={styles['input-wrapper']} onPress={onPressText}>
-            <TextField
-              state="default-no-label"
-              placeholder="Apa yang ingin kamu tanyakan?"
-              isActionProtected={user ? false : true}
+
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextField
+                  state="default-no-label"
+                  placeholder="Apa yang ingin kamu tanyakan?"
+                  isActionProtected={user ? false : true}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+              name="notes"
             />
+
           </TouchableOpacity>
         </View>
 
@@ -85,7 +111,7 @@ const PostFeed = () => {
   );
 };
 
-export default PostFeed;
+export default memo(PostFeed);
 
 const styles = StyleSheet.create({
   'post-feed-container': {

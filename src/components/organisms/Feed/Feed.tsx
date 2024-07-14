@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
@@ -24,6 +24,10 @@ const Feed: React.FC<FeedProps> = feed => {
     if (!isAllowed) return
   }
 
+  const relativeTime = useMemo(() => {
+    return moment(feed.created_at).startOf('minute').fromNow()
+  }, [])
+
   return (
     <View style={styles['item-container']}>
       <View style={styles['item-header']}>
@@ -38,7 +42,7 @@ const Feed: React.FC<FeedProps> = feed => {
             <Typography size="small">{feed.headline}</Typography>
           )}
           <Typography size="xsmall">
-            {moment(feed.created_at).startOf('minute').fromNow()}
+            {relativeTime}
           </Typography>
         </View>
         <TouchableOpacity style={styles['item-header-action']} onPress={onPressHeaderAction}>
@@ -76,7 +80,7 @@ const Feed: React.FC<FeedProps> = feed => {
   );
 };
 
-export default Feed;
+export default memo(Feed);
 
 const styles = StyleSheet.create({
   'item-container': {

@@ -4,7 +4,7 @@ import { NavigationHelpers, ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export const generateHomeData = () => {
-  const totalData = 5;
+  const totalData = 100;
 
   const data = Array.from({ length: totalData }).map((v, idx) => ({
     id: faker.string.uuid(),

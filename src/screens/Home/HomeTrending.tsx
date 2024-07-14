@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 import { Feed } from '@components/organisms';
@@ -18,11 +18,11 @@ const HomeTrending = () => {
     setTrendingData(mostTrending);
   };
 
-  const onRefresh = () => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true)
     setFeedData(generateHomeData());
     setRefreshing(false)
-  }
+  }, []);
 
   useEffect(() => {
     if (feedData) {
@@ -46,7 +46,7 @@ const HomeTrending = () => {
   );
 };
 
-export default HomeTrending;
+export default memo(HomeTrending);
 
 const styles = StyleSheet.create({
   container: {
