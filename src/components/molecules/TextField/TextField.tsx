@@ -28,14 +28,14 @@ const TextField: React.FC<TextFieldProps & TextInputProps> = ({
   message = 'message',
   onBlur,
   onChangeText,
-  value
+  value,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   const getStyleByState = () => {
     if (isFocused) {
-      return styles.inputTextContainerFocused
+      return styles.inputTextContainerFocused;
     }
 
     switch (state) {
@@ -58,6 +58,8 @@ const TextField: React.FC<TextFieldProps & TextInputProps> = ({
     }
   };
 
+  const togglePassword = () => setIsVisible(!isVisible);
+
   return (
     <View>
       {state !== 'default-no-label' && (
@@ -77,15 +79,22 @@ const TextField: React.FC<TextFieldProps & TextInputProps> = ({
           style={[styles.inputText]}
           onFocus={() => setIsFocused(true)}
           onBlur={() => {
-            if (onBlur) (e: NativeSyntheticEvent<TextInputFocusEventData>) => onBlur(e)
-            setIsFocused(false)
+            if (onBlur)
+              (e: NativeSyntheticEvent<TextInputFocusEventData>) => onBlur(e);
+            setIsFocused(false);
           }}
           onChangeText={onChangeText}
           value={value}
         />
         {type === 'password' && (
-          <TouchableOpacity onPress={() => setIsVisible(prev => !prev)}>
-            <Icon name={isVisible ? 'eye-slash' : 'eye'} width={16} height={16} />
+          <TouchableOpacity onPress={togglePassword}>
+            <View style={styles['password-icon']}>
+              <Icon
+                name={isVisible ? 'eye-slash' : 'eye'}
+                width={16}
+                height={16}
+              />
+            </View>
           </TouchableOpacity>
         )}
       </View>
@@ -108,17 +117,20 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.paragraphMedium,
     fontFamily: 'Inter-Regular',
     color: COLORS.neutral700,
-    flex: 1
+    flex: 1,
+    marginHorizontal: 16,
+    paddingVertical: 9,
   },
   inputTextContainer: {
     borderWidth: 1,
     borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 9,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 40
+    height: 40,
+  },
+  'password-icon': {
+    marginRight: 16,
   },
 
   inputTextContainerDefault: {
