@@ -90,6 +90,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     paddingHorizontal: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.neutral300,
   },
   tab: {
     flex: 1,
