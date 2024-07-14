@@ -3,3 +3,4 @@ export { default as OnboardingInvestLogo } from '@assets/images/onboarding-inves
 export { default as OnboardingLearnLogo } from '@assets/images/onboarding-learn.png'
 export { default as AvatarImage } from '@assets/images/avatar.png'
 export { default as InvestlyFull } from '@assets/images/investly-full.png'
+export { default as InvestlyMascot } from '@assets/images/investly-mascot.png'

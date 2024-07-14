@@ -3,8 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { Home, Profile } from '@screens';
-import { Appbar, MainTab } from '@components/molecules';
-import { Icon } from '@components/atom';
+import { Appbar } from '@components/molecules';
+import { MainTab } from '@components/organisms';
 
 const Tab = createBottomTabNavigator();
 
