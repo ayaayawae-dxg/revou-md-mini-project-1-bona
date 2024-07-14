@@ -1,23 +1,25 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
-import { Avatar, Icon, Label, Typography } from '@components/atom'
-import { COLORS } from '@constant'
-import { FeedActionButton } from '@components/molecules'
+import { Avatar, Icon, Label, Typography } from '@components/atom';
+import { COLORS } from '@constant';
+import { FeedActionButton } from '@components/molecules';
 
-const Feed: React.FC<FeedProps> = (feed) => {
+const Feed: React.FC<FeedProps> = feed => {
   return (
     <View style={styles['item-container']}>
       <View style={styles['item-header']}>
-        <Avatar source={feed.avatar_url} size={'large'} />
+        <View style={styles['item-header-avatar']}>
+          <Avatar source={feed.avatar_url} size={'large'} />
+        </View>
         <View style={styles['item-header-status']}>
           <Typography size="xsmall" type="heading">
             {feed.name}
           </Typography>
-          <Typography size="small">{feed.headline}</Typography>
-          <Typography size="xsmall">
-            {feed.created_at.toUTCString()}
-          </Typography>
+          {feed.headline && (
+            <Typography size="small">{feed.headline}</Typography>
+          )}
+          <Typography size="xsmall">{feed.created_at.toUTCString()}</Typography>
         </View>
         <Icon name="ellipsis" width={16} height={16} />
       </View>
@@ -47,10 +49,10 @@ const Feed: React.FC<FeedProps> = (feed) => {
         />
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default Feed
+export default Feed;
 
 const styles = StyleSheet.create({
   'item-container': {
@@ -61,6 +63,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.neutral100,
   },
   'item-header': { flexDirection: 'row' },
+  'item-header-avatar': {},
   'item-header-status': { flex: 1, marginLeft: 12 },
   'item-content': { marginTop: 12 },
   'item-content-tags': { flexDirection: 'row', marginTop: 12 },
@@ -70,4 +73,4 @@ const styles = StyleSheet.create({
     gap: 8,
     flexWrap: 'wrap',
   },
-})
+});
