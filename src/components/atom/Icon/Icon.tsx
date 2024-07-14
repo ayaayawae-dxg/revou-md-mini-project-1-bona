@@ -17,6 +17,8 @@ import {
   ArrowDownIcon,
   CommentIcon,
   RetweetIcon,
+  HomeIcon,
+  UserIcon,
 } from '@assets/icons';
 import { COLORS } from '@constant';
 
@@ -34,7 +36,9 @@ export type IconName =
   | 'arrow-up'
   | 'arrow-down'
   | 'comment'
-  | 'retweet';
+  | 'retweet'
+  | 'home'
+  | 'user';
 
 const IconMap: Record<IconName, React.FC<SvgProps>> = {
   heart: HeartIcon,
@@ -51,6 +55,8 @@ const IconMap: Record<IconName, React.FC<SvgProps>> = {
   'arrow-down': ArrowDownIcon,
   'comment': CommentIcon,
   'retweet': RetweetIcon,
+  'home': HomeIcon,
+  'user': UserIcon,
 };
 
 type IconProps = {

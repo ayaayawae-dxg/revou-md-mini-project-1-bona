@@ -2,7 +2,7 @@ import { StyleSheet, Text, TextProps, TextStyle, View } from 'react-native';
 import React from 'react';
 import { COLORS, FONT_SIZE } from '@constant';
 
-type TypographyProps = {
+export type TypographyProps = {
   type?: 'heading' | 'paragraph' | 'special';
   size?:
   | 'xxlarge'
@@ -12,7 +12,7 @@ type TypographyProps = {
   | 'small'
   | 'xsmall'
   | 'xxsmall';
-  children: React.ReactNode;
+  children?: React.ReactNode;
   style?: TextStyle;
 };
 

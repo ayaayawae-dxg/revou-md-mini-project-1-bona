@@ -5,3 +5,4 @@ export { default as Label } from './Label/Label';
 export { default as Dots } from './Dots/Dots';
 
 export type { IconName } from './Icon/Icon';
+export type { TypographyProps } from './Typography/Typography';
