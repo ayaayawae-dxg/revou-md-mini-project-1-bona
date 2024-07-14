@@ -18,6 +18,7 @@ type TextFieldProps = {
   placeholder?: string;
   label?: string;
   message?: string;
+  isActionProtected?: boolean;
 };
 
 const TextField: React.FC<TextFieldProps & TextInputProps> = ({
@@ -26,6 +27,7 @@ const TextField: React.FC<TextFieldProps & TextInputProps> = ({
   placeholder = 'Placeholder',
   label = 'Label',
   message = 'message',
+  isActionProtected = false,
   onBlur,
   onChangeText,
   value,
@@ -73,7 +75,7 @@ const TextField: React.FC<TextFieldProps & TextInputProps> = ({
       <View style={[styles.inputTextContainer, getStyleByState()]}>
         <TextInput
           secureTextEntry={type === 'password' && isVisible === false}
-          editable={state !== 'disabled'}
+          editable={isActionProtected ? false : state !== 'disabled'}
           placeholderTextColor={COLORS.neutral500}
           placeholder={placeholder}
           style={[styles.inputText]}

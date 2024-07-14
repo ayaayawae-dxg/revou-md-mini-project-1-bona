@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react';
 
-type AuthContextType = {
+export type AuthContextType = {
   user: UserAuthProps | null;
   setUser: Dispatch<SetStateAction<UserAuthProps | null>>;
 };

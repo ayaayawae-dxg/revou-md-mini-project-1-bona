@@ -5,34 +5,41 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { COLORS } from '@constant';
 import { Icon, IconName, Typography, TypographyProps } from '@components/atom';
 import { MainTabHint } from '@components/molecules';
+import { AuthContextType, useAuth } from '@hooks';
+import { redirectOnUnauthorized } from '@utils/helper';
 
 type TabIconProps = {
   name: string;
   icon: IconName;
+  isActionProtected?: boolean;
 };
 
 type GetTextTypeAndSizeProps = () => TypographyProps;
 
 const TabsIcon: TabIconProps[] = [
   { name: 'Home', icon: 'home' },
-  { name: 'Profile', icon: 'user' },
+  { name: 'Profile', icon: 'user', isActionProtected: true },
 ];
 
-const MainTab: React.FC<BottomTabBarProps> = ({
+const MainTab: React.FC<BottomTabBarProps & AuthContextType> = ({
   state,
   descriptors,
   navigation,
+  user
 }) => {
+
   return (
     <>
       <MainTabHint />
-      
+
       <View style={styles.container}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
 
           const iconName =
             TabsIcon.find(v => v.name === route.name)?.icon || 'question';
+
+          const isProtected = TabsIcon.find(v => v.name === route.name)?.isActionProtected === true;
 
           const label: any =
             options.tabBarLabel !== undefined
@@ -44,6 +51,9 @@ const MainTab: React.FC<BottomTabBarProps> = ({
           const isFocused = state.index === index;
 
           const onPress = () => {
+            const isAllowed = isProtected ? redirectOnUnauthorized(user, navigation) : true
+            if (!isAllowed) return
+
             const event = navigation.emit({
               type: 'tabPress',
               target: route.key,

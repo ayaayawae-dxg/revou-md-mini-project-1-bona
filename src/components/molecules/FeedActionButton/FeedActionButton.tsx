@@ -1,8 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import React from 'react';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
 import { COLORS } from '@constant';
 import { Icon, IconName, Typography } from '@components/atom';
+import { redirectOnUnauthorized } from '@utils/helper';
+import { useAuth } from '@hooks';
 
 type ButtonProps = {
   icon: IconName;
@@ -14,13 +18,21 @@ type FeedActionButtonProps = {
 };
 
 const FeedActionButton: React.FC<FeedActionButtonProps> = ({ data }) => {
+  const { user } = useAuth();
+  const navigation: NativeStackNavigationProp<RootStackParamList> = useNavigation();
+
+  const onPressAction = () => {
+    const isAllowed = redirectOnUnauthorized(user, navigation)
+    if (!isAllowed) return
+  }
+
   return (
     <View style={styles['item-footer-action']}>
       {data.map((item, index) => (
         <React.Fragment key={index}>
           {index > 0 && <View style={styles.divider}></View>}
 
-          <View key={index} style={styles['item-footer-action-button']}>
+          <TouchableOpacity key={index} style={styles['item-footer-action-button']} onPress={onPressAction}>
             <Icon
               name={item.icon}
               width={16}
@@ -28,7 +40,7 @@ const FeedActionButton: React.FC<FeedActionButtonProps> = ({ data }) => {
               fill={COLORS.neutral700}
             />
             <Typography size="small">{item.count}</Typography>
-          </View>
+          </TouchableOpacity>
         </React.Fragment>
       ))}
     </View>

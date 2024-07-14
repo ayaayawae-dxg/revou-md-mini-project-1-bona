@@ -1,4 +1,7 @@
-import { faker } from '@faker-js/faker'
+import { faker } from '@faker-js/faker';
+import { BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs';
+import { NavigationHelpers, ParamListBase } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export const generateHomeData = () => {
   const totalData = 5;
@@ -17,5 +20,16 @@ export const generateHomeData = () => {
     post_comment: faker.number.int({ min: 0, max: 1000 }),
   }));
 
-  return data
+  return data;
+};
+
+export const redirectOnUnauthorized = (
+  user: UserAuthProps | null,
+  navigation: NativeStackNavigationProp<RootStackParamList> | NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>,
+): boolean => {
+  if (!user) {
+    navigation.reset({ routes: [{ name: 'Login' }] });
+    return false;
+  }
+  return true;
 };

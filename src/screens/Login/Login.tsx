@@ -13,7 +13,7 @@ import { RevouLogo } from '@assets/images';
 
 type LoginProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
-}
+};
 
 type FormData = {
   email: string;
@@ -80,7 +80,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     const userData = {
       avatar_url: Image.resolveAssetSource(RevouLogo).uri,
       email: data.email,
-    }
+    };
 
     setUser(userData);
     navigation.reset({ routes: [{ name: 'Main' }] });
@@ -96,7 +96,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     }
   };
 
-  const onBack = () => navigation.goBack();
+  const onBack = () => navigation.reset({ routes: [{ name: 'Onboarding' }] });
 
   const onLewati = () => navigation.navigate('Main');
 
