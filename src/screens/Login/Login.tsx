@@ -1,5 +1,6 @@
 import React from 'react';
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,8 +12,8 @@ import { useAuth } from '@hooks';
 import { RevouLogo } from '@assets/images';
 
 type LoginProps = {
-  navigation: any;
-};
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
+}
 
 type FormData = {
   email: string;
@@ -53,8 +54,8 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     formState: { errors, isValid, dirtyFields },
   } = useForm<FormData>({
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'bona@test.app',
+      password: 'TestApp123!',
     },
     mode: 'all',
     resolver: zodResolver(loginSchema),
@@ -76,11 +77,13 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       return Alert.alert('Login gagal', 'Email atau password salah');
     }
 
-    setUser({
+    const userData = {
       avatar_url: Image.resolveAssetSource(RevouLogo).uri,
       email: data.email,
-    });
-    navigation.navigate('Main');
+    }
+
+    setUser(userData);
+    navigation.reset({ routes: [{ name: 'Main' }] });
   };
 
   const getInputState = (name: keyof FormData) => {

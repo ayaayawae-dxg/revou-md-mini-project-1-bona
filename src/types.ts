@@ -16,3 +16,10 @@ type UserAuthProps = {
   avatar_url: string;
   email: string;
 }
+
+type RootStackParamList = {
+  Onboarding: undefined;
+  Login: undefined;
+  Main: undefined;
+  ScreenFour: undefined;
+};

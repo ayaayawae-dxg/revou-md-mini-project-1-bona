@@ -4,8 +4,13 @@ import React from 'react';
 import { Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { InvestlyMascot } from '@assets/images';
+import { useAuth } from '@hooks';
 
 const MainTabHint = () => {
+  const { user } = useAuth();
+
+  if (user) return null;
+
   return (
     <View style={styles['container']}>
       <View style={styles['image-container']}>
