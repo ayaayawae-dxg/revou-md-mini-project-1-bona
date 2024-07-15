@@ -21,5 +21,5 @@ type RootStackParamList = {
   Onboarding: undefined;
   Login: undefined;
   Main: undefined;
-  ScreenFour: undefined;
+  FeedDetail: FeedProps;
 };

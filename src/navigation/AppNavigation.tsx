@@ -1,26 +1,41 @@
-import React from 'react'
-import { StyleSheet } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native'
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { Login, Main, Onboarding } from '@screens';
+import { FeedDetail, Login, Main, Onboarding } from '@screens';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
-        <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-        <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="Onboarding"
+          component={Onboarding}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="FeedDetail"
+          component={FeedDetail}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
-  )
-}
+  );
+};
 
-export default AppNavigation
+export default AppNavigation;
 
-const styles = StyleSheet.create({
-
-})
+const styles = StyleSheet.create({});

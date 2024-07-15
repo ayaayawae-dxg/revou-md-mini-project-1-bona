@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import React, { useRef, useState } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Button } from '@components/molecules';
 import { Dots, Typography } from '@components/atom';
@@ -18,9 +19,7 @@ import {
 import { getScreenWidth } from '@utils/screen';
 import { COLORS } from '@constant';
 
-type OnboardingProps = {
-  navigation: any;
-};
+type OnboardingProps = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
 
 type StepProps = {
   image: ImageSourcePropType;

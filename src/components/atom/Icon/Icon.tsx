@@ -19,6 +19,7 @@ import {
   RetweetIcon,
   HomeIcon,
   UserIcon,
+  PaperPlaneIcon,
 } from '@assets/icons';
 import { COLORS } from '@constant';
 
@@ -38,7 +39,8 @@ export type IconName =
   | 'comment'
   | 'retweet'
   | 'home'
-  | 'user';
+  | 'user'
+  | 'paper-plane';
 
 const IconMap: Record<IconName, React.FC<SvgProps>> = {
   heart: HeartIcon,
@@ -57,6 +59,7 @@ const IconMap: Record<IconName, React.FC<SvgProps>> = {
   'retweet': RetweetIcon,
   'home': HomeIcon,
   'user': UserIcon,
+  'paper-plane': PaperPlaneIcon,
 };
 
 type IconProps = {

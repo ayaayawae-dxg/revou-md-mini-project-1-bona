@@ -2,11 +2,11 @@ import React, { memo, useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import moment from 'moment';
 
 import { Avatar, Icon, Label, Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { FeedActionButton } from '@components/molecules';
-import moment from 'moment';
 import { useAuth } from '@hooks';
 import { redirectOnUnauthorized } from '@utils/helper';
 
@@ -17,6 +17,8 @@ const Feed: React.FC<FeedProps> = feed => {
   const onPressContent = () => {
     const isAllowed = redirectOnUnauthorized(user, navigation)
     if (!isAllowed) return
+
+    navigation.navigate('FeedDetail', feed)
   }
 
   const onPressHeaderAction = () => {

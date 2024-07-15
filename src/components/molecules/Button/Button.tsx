@@ -12,7 +12,7 @@ type ButtonProps = {
   type?: 'text-only' | 'icon-left' | 'icon-right' | 'icon-only';
   size?: 'large' | 'medium' | 'small';
   variant?: 'primary' | 'outline' | 'tertiary' | 'link';
-  children: React.ReactNode;
+  children?: React.ReactNode;
   style?: TextStyle | TextStyle[];
   icon?: React.ReactElement;
   onPress?: () => void

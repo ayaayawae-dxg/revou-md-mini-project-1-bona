@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,9 +11,7 @@ import { COLORS } from '@constant';
 import { useAuth } from '@hooks';
 import { RevouLogo } from '@assets/images';
 
-type LoginProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
-};
+type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 type FormData = {
   email: string;
