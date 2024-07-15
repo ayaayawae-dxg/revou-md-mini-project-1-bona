@@ -31,6 +31,8 @@ const PostFeed = () => {
   const onPressText = () => {
     const isAllowed = redirectOnUnauthorized(user, navigation)
     if (!isAllowed) return
+
+    navigation.navigate('FeedCreate');
   }
 
   const onPressPertanyaan = () => {
@@ -50,15 +52,15 @@ const PostFeed = () => {
       <View style={styles['post-feed-card']}>
         <View style={styles['post-feed-card-header']}>
           <Avatar size="large" source={user ? user.avatar_url : null} />
-          <TouchableOpacity style={styles['input-wrapper']} onPress={onPressText}>
 
+          <TouchableOpacity style={styles['input-wrapper']} onPress={onPressText}>
             <Controller
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextField
                   state="default-no-label"
                   placeholder="Apa yang ingin kamu tanyakan?"
-                  isActionProtected={user ? false : true}
+                  isActionProtected={true}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -66,7 +68,6 @@ const PostFeed = () => {
               )}
               name="notes"
             />
-
           </TouchableOpacity>
         </View>
 
