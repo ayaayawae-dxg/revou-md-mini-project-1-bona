@@ -41,6 +41,8 @@ const PostFeed = () => {
   const onPressAddPost = () => {
     const isAllowed = redirectOnUnauthorized(user, navigation)
     if (!isAllowed) return
+
+    navigation.navigate('FeedCreate');
   }
 
   return (

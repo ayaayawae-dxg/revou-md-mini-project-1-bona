@@ -6,3 +6,4 @@ export { default as HomeNew } from './Home/HomeNew';
 export { default as HomeTrending } from './Home/HomeTrending';
 export { default as Profile } from './Profile/Profile';
 export { default as FeedDetail } from './Feed/FeedDetail';
+export { default as FeedCreate } from './Feed/FeedCreate';

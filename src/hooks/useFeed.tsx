@@ -9,8 +9,8 @@ import {
 } from 'react';
 
 type FeedContextType = {
-  feedData: FeedProps[] | null;
-  setFeedData: Dispatch<SetStateAction<FeedProps[] | null>>;
+  feedData: FeedProps[];
+  setFeedData: Dispatch<SetStateAction<FeedProps[]>>;
 };
 
 const FeedContext = createContext<FeedContextType | undefined>(undefined);
@@ -24,7 +24,7 @@ const useFeed = (): FeedContextType => {
 };
 
 const FeedProvider = (props: { children: ReactNode }): ReactElement => {
-  const [feedData, setFeedData] = useState<FeedProps[] | null>(null);
+  const [feedData, setFeedData] = useState<FeedProps[]>([]);
 
   return <FeedContext.Provider {...props} value={{ feedData, setFeedData }} />;
 };

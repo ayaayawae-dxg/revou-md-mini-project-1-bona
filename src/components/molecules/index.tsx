@@ -6,3 +6,4 @@ export { default as FeedActionButton } from './FeedActionButton/FeedActionButton
 export { default as FeedEndContent } from './FeedEndContent/FeedEndContent';
 export { default as HomeTab } from './HomeTab/HomeTab';
 export { default as MainTabHint } from './MainTabHint/MainTabHint';
+export { default as SimpleTextField } from './SimpleTextField/SimpleTextField';

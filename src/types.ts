@@ -22,4 +22,5 @@ type RootStackParamList = {
   Login: undefined;
   Main: undefined;
   FeedDetail: FeedProps;
+  FeedCreate: undefined;
 };

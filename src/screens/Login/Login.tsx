@@ -52,8 +52,8 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     formState: { errors, isValid, dirtyFields },
   } = useForm<FormData>({
     defaultValues: {
-      email: 'bona@test.app',
-      password: 'TestApp123!',
+      email: '',
+      password: '',
     },
     mode: 'all',
     resolver: zodResolver(loginSchema),
