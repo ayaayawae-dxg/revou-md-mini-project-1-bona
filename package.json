@@ -1,5 +1,6 @@
 {
   "name": "SocialMedia",
+  "description": "A simple Social Media App developed using React Native for Mini Project + Milestone Assignment",
   "version": "0.0.1",
   "private": true,
   "scripts": {
