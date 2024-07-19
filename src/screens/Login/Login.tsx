@@ -197,6 +197,7 @@ const styles = StyleSheet.create({
   form: {
     marginHorizontal: 24,
     gap: 24,
+    marginTop: 32
   },
   'forgot-password': {
     alignItems: 'flex-start',
