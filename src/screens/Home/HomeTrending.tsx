@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 import { Feed } from '@components/organisms';
@@ -8,27 +8,16 @@ import { generateHomeData } from '@utils/helper';
 
 const HomeTrending = () => {
   const { feedData, setFeedData } = useFeed();
-  const [trendingData, setTrendingData] = useState<FeedProps[] | null>([]);
   const [refreshing, setRefreshing] = useState(false);
-
-  const setDataToMostTrending = (feedData: FeedProps[]) => {
-    const mostTrending = [...feedData].sort(
-      (a, b) => b.post_upvote - a.post_upvote,
-    );
-    setTrendingData(mostTrending);
-  };
+  const trendingData = useMemo(() => {
+    return [...feedData].sort((a, b) => b.post_upvote - a.post_upvote);
+  }, [feedData]);
 
   const onRefresh = useCallback(() => {
-    setRefreshing(true)
+    setRefreshing(true);
     setFeedData(generateHomeData());
-    setRefreshing(false)
+    setRefreshing(false);
   }, []);
-
-  useEffect(() => {
-    if (feedData) {
-      setDataToMostTrending(feedData);
-    }
-  }, [feedData]);
 
   return (
     <View style={styles.container}>
