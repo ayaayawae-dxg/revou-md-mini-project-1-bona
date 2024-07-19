@@ -1,16 +1,11 @@
+import React from 'react';
 import {
-  NativeSyntheticEvent,
   StyleSheet,
   TextInput,
-  TextInputFocusEventData,
   TextInputProps,
-  TextStyle,
-  TouchableOpacity,
-  View,
+  TextStyle
 } from 'react-native';
-import React, { useState } from 'react';
 
-import { Icon, Typography } from '@components/atom';
 import { COLORS, FONT_SIZE } from '@constant';
 
 type SimpleTextFieldProps = {
