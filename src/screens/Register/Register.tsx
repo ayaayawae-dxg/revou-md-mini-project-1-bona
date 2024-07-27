@@ -1,5 +1,11 @@
 import React from 'react';
-import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
@@ -9,79 +15,84 @@ import { Button, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { useAuth } from '@hooks';
-import { RevouLogo } from '@assets/images';
+import { investlyServices } from '@services';
 
-type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
+type RegisterProps = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
 type FormData = {
   email: string;
   password: string;
+  confirmationPassword: string;
 };
 
-const loginSchema: ZodType<FormData> = z.object({
-  email: z
-    .string()
-    .min(1, 'Email harus diisi')
-    .trim()
-    .max(254)
-    .regex(
-      /^[^\s()<>[\],;:"\\']+$/,
-      `Email tidak boleh mengandung karakter spesial ( ) < > , ; : " [ ] '`,
-    )
-    .email('Format email tidak sesuai')
-    .toLowerCase(),
-  password: z
-    .string()
-    .min(1, 'Password harus diisi')
-    .min(8, 'Password harus mengandung minimal 8 karakter')
-    .max(64, 'Password harus mengandung maksimal 64 karakter')
-    .regex(/[A-Z]/, 'Password harus mengandung huruf besar')
-    .regex(/[a-z]/, 'Password harus mengandung huruf kecil')
-    .regex(/[0-9]/, 'Password harus mengandung angka')
-    .regex(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      'Password harus mengandung karakter spesial',
-    ),
-});
+const registerSchema: ZodType<FormData> = z
+  .object({
+    email: z
+      .string()
+      .min(1, 'Email harus diisi')
+      .trim()
+      .max(254)
+      .regex(
+        /^[^\s()<>[\],;:"\\']+$/,
+        `Email tidak boleh mengandung karakter spesial ( ) < > , ; : " [ ] '`,
+      )
+      .email('Format email tidak sesuai')
+      .toLowerCase(),
+    password: z
+      .string()
+      .min(1, 'Password harus diisi')
+      .min(8, 'Password harus mengandung minimal 8 karakter')
+      .max(64, 'Password harus mengandung maksimal 64 karakter')
+      .regex(/[A-Z]/, 'Password harus mengandung huruf besar')
+      .regex(/[a-z]/, 'Password harus mengandung huruf kecil')
+      .regex(/[0-9]/, 'Password harus mengandung angka')
+      .regex(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        'Password harus mengandung karakter spesial',
+      ),
+    confirmationPassword: z.string(),
+  })
+  .refine(data => data.password === data.confirmationPassword, {
+    message: 'Konfirmasi password tidak sesuai',
+    path: ['confirmationPassword'],
+  });
 
-const Login: React.FC<LoginProps> = ({ navigation }) => {
+const Register: React.FC<RegisterProps> = ({ navigation }) => {
   const { setUser } = useAuth();
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, dirtyFields },
+    formState: { errors, isValid, dirtyFields, isSubmitting },
   } = useForm<FormData>({
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'jagoan@investly.id',
+      // email: 'abece@gmail.com',
+      password: 'Asdqwe12#',
+      confirmationPassword: 'Asdqwe12#',
     },
     mode: 'all',
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(registerSchema),
   });
 
-  const validateLogin = (data: FormData) => {
-    const validEmail = 'bona@test.app';
-    const validPassword = 'TestApp123!';
-    if (data.email === validEmail && data.password === validPassword) {
-      return true;
-    }
-
-    return false;
+  const validateEmail = async (email: string): Promise<Boolean> => {
+    return await investlyServices
+      .checkEmail({ email })
+      .then(response => {
+        const { status } = response.data;
+        return status;
+      })
+      .catch(error => {
+        const { messages } = error.response.data;
+        Alert.alert(messages);
+        return false;
+      });
   };
 
-  const onSubmit = (data: FormData) => {
-    const isValid = validateLogin(data);
-    if (!isValid) {
-      return Alert.alert('Login gagal', 'Email atau password salah');
-    }
+  const onSubmit = async (data: FormData) => {
+    const isValid = await validateEmail(data.email);
+    if (!isValid) return;
 
-    const userData = {
-      avatar_url: Image.resolveAssetSource(RevouLogo).uri,
-      email: data.email,
-    };
-
-    setUser(userData);
-    navigation.reset({ routes: [{ name: 'Main' }] });
+    // navigation.reset({ routes: [{ name: 'Main' }] });
   };
 
   const getInputState = (name: keyof FormData) => {
@@ -94,11 +105,9 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     }
   };
 
-  const onBack = () => navigation.reset({ routes: [{ name: 'Onboarding' }] });
+  const onBack = () => navigation.navigate('Login');
 
-  const onLewati = () => navigation.navigate('Main');
-
-  const onRegister = () => navigation.navigate('Register');
+  const onMasuk = () => navigation.navigate('Login');
 
   return (
     <View style={styles['container']}>
@@ -113,13 +122,13 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
             <Icon name="investly" />
           </View>
           <View style={styles['header-action-right']}>
-            <Button variant="link" onPress={onLewati}>
-              Lewati
+            <Button variant="link" onPress={onMasuk}>
+              Masuk
             </Button>
           </View>
         </View>
         <Typography style={styles['header-title']} type="heading" size="large">
-          Masuk ke Investly
+          Buat Akun
         </Typography>
       </View>
 
@@ -130,7 +139,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextField
               state={getInputState('email')}
-              placeholder="Email"
+              placeholder="Masukkan email kamu"
               label="Email"
               onBlur={onBlur}
               onChangeText={onChange}
@@ -147,7 +156,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextField
               state={getInputState('password')}
-              placeholder="Masukkan password"
+              placeholder="Masukkan password kamu"
               label="Password"
               type="password"
               onBlur={onBlur}
@@ -158,32 +167,39 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
           )}
           name="password"
         />
-      </View>
 
-      <View style={styles['forgot-password']}>
-        <Button variant="link">Lupa Password</Button>
+        <Controller
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextField
+              state={getInputState('confirmationPassword')}
+              placeholder="Masukkan konfirmasi password"
+              label="Konfirmasi Password"
+              type="password"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              message={errors.confirmationPassword?.message}
+            />
+          )}
+          name="confirmationPassword"
+        />
       </View>
-
-      <Button
-        style={styles['button-login']}
-        disabled={!isValid}
-        onPress={handleSubmit(onSubmit)}>
-        Masuk
-      </Button>
 
       <View style={styles.flex}></View>
 
       <Button
+        disabled={isSubmitting}
         style={styles['button-register']}
-        variant="outline"
-        onPress={onRegister}>
-        Daftar
+        onPress={handleSubmit(onSubmit)}>
+        {isSubmitting ? <ActivityIndicator /> : 'Selanjutnya'}
       </Button>
     </View>
   );
 };
 
-export default Login;
+export default Register;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.neutral100 },

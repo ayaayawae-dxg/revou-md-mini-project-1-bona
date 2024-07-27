@@ -20,6 +20,7 @@ type UserAuthProps = {
 type RootStackParamList = {
   Onboarding: undefined;
   Login: undefined;
+  Register: undefined;
   Main: undefined;
   FeedDetail: FeedProps;
   FeedCreate: undefined;

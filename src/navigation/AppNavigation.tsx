@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { FeedCreate, FeedDetail, Login, Main, Onboarding } from '@screens';
+import { FeedCreate, FeedDetail, Login, Main, Onboarding, Register } from '@screens';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -19,6 +19,11 @@ const AppNavigation = () => {
         <Stack.Screen
           name="Login"
           component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
           options={{ headerShown: false }}
         />
         <Stack.Screen

@@ -1,8 +1,8 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
-import { Feed } from '@components/organisms';
 import { FeedEndContent } from '@components/molecules';
+import { Feed } from '@components/organisms';
 import { useFeed } from '@hooks';
 import { generateHomeData } from '@utils/helper';
 

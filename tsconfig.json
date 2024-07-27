@@ -10,6 +10,7 @@
       "@navigation": ["navigation"],
       "@utils/*": ["utils/*"],
       "@hooks": ["hooks"],
+      "@services": ["services"],
     },
   }
 }
