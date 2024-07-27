@@ -1,6 +1,7 @@
 export { default as Onboarding } from './Onboarding/Onboarding';
 export { default as Login } from './Login/Login';
-export { default as Register } from './Register/Register';
+export { default as RegisterStepOne } from './Register/RegisterStepOne';
+export { default as RegisterStepTwo } from './Register/RegisterStepTwo';
 export { default as Main } from './Main/Main';
 export { default as Home } from './Home/Home';
 export { default as HomeNew } from './Home/HomeNew';

@@ -16,8 +16,9 @@ import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { useAuth } from '@hooks';
 import { investlyServices } from '@services';
+import { RegisterStackScreenProps } from '@navigation';
 
-type RegisterProps = NativeStackScreenProps<RootStackParamList, 'Register'>;
+type RegisterStepTwoProps = RegisterStackScreenProps<'RegisterStep2'>
 
 type FormData = {
   email: string;
@@ -57,7 +58,7 @@ const registerSchema: ZodType<FormData> = z
     path: ['confirmationPassword'],
   });
 
-const Register: React.FC<RegisterProps> = ({ navigation }) => {
+const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
   const { setUser } = useAuth();
   const {
     control,
@@ -65,10 +66,9 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
     formState: { errors, isValid, dirtyFields, isSubmitting },
   } = useForm<FormData>({
     defaultValues: {
-      email: 'jagoan@investly.id',
-      // email: 'abece@gmail.com',
-      password: 'Asdqwe12#',
-      confirmationPassword: 'Asdqwe12#',
+      email: '',
+      password: '',
+      confirmationPassword: '',
     },
     mode: 'all',
     resolver: zodResolver(registerSchema),
@@ -105,7 +105,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
     }
   };
 
-  const onBack = () => navigation.navigate('Login');
+  const onBack = () => navigation.goBack();
 
   const onMasuk = () => navigation.navigate('Login');
 
@@ -128,7 +128,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
           </View>
         </View>
         <Typography style={styles['header-title']} type="heading" size="large">
-          Buat Akun
+          Tambahkan Nama & Username
         </Typography>
       </View>
 
@@ -199,7 +199,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
   );
 };
 
-export default Register;
+export default RegisterStepTwo;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.neutral100 },

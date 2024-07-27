@@ -15,12 +15,18 @@ type FeedProps = {
 type UserAuthProps = {
   avatar_url: string;
   email: string;
-}
+};
+
+type RegisterStackParamList = {
+  RegisterStep1: undefined;
+  RegisterStep2: undefined;
+  RegisterStep3: undefined;
+};
 
 type RootStackParamList = {
   Onboarding: undefined;
   Login: undefined;
-  Register: undefined;
+  Register: { screen?: keyof RegisterStackParamList };
   Main: undefined;
   FeedDetail: FeedProps;
   FeedCreate: undefined;
