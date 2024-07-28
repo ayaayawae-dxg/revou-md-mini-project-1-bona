@@ -214,28 +214,19 @@ const styles = StyleSheet.create({
   'header-title': {
     marginHorizontal: 24,
     textAlign: 'center',
-    marginTop: 24,
+    marginTop: 20,
   },
   form: {
     marginHorizontal: 24,
-    gap: 24,
-    marginTop: 32,
-  },
-  'forgot-password': {
-    alignItems: 'flex-start',
-    marginTop: 16,
-    marginHorizontal: 24,
-  },
-  'button-login': {
-    marginHorizontal: 20,
+    gap: 16,
     marginTop: 24,
   },
   'button-register': {
-    marginHorizontal: 20,
-    marginBottom: 44,
+    marginHorizontal: 24,
+    marginBottom: 32,
   },
   'error-message': {
-    color: COLORS.red500,
+    color: COLORS.purple200,
     marginTop: 8,
   },
 });

@@ -11,6 +11,7 @@
       "@utils/*": ["utils/*"],
       "@hooks": ["hooks"],
       "@services": ["services"],
+      "@store": ["store"],
     },
   }
 }

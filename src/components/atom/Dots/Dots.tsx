@@ -10,7 +10,7 @@ const Dots: React.FC<DotsProps> = ({ active = false }) => {
   const getStyleByActive = () => {
     return active
       ? { backgroundColor: COLORS.purple600, width: 16 }
-      : { backgroundColor: COLORS.purple100, widht: 8 };
+      : { backgroundColor: COLORS.purple100, width: 8 };
   };
 
   return <View style={[styles.container, getStyleByActive()]}></View>;

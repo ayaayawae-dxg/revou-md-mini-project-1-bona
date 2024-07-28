@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
 export type LoginRequest = {
   email: string;
@@ -19,6 +19,17 @@ export type CheckEmailRequest = {
 
 export type GetProfileByUsernameRequest = {
   username: string;
+};
+
+export type GetTopicsResponse = {
+  id: string;
+  file: {
+    name_display: string;
+    full_path: string;
+    size: number;
+    mime_type: string;
+  };
+  label: string;
 };
 
 const login = ({ email, password }: LoginRequest) =>
@@ -55,11 +66,19 @@ const checkEmail = ({ email }: CheckEmailRequest) =>
   );
 
 const getProfileByUsername = ({ username }: GetProfileByUsernameRequest) =>
-  axios.get(`https://develop.investly.id/api/social/v1/public/username/${username}`);
+  axios.get(
+    `https://develop.investly.id/api/social/v1/public/username/${username}`,
+  );
+
+const getTopics = () =>
+  axios.get(
+    `https://develop.investly.id/api/social/v1/public/masterdata/topic`,
+  );
 
 export default {
   login,
   register,
   checkEmail,
-  getProfileByUsername
+  getProfileByUsername,
+  getTopics
 };

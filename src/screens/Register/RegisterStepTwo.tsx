@@ -73,7 +73,7 @@ const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
   });
 
   const onSubmit = async (data: FormData) => {
-    navigation.reset({ routes: [{ name: 'RegisterStep3' }] });
+    navigation.navigate('RegisterStep3');
   };
 
   const getInputState = (name: keyof FormData) => {
@@ -98,14 +98,6 @@ const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
             <TouchableOpacity onPress={onBack}>
               <Icon name="chevron-left" width={20} height={20} />
             </TouchableOpacity>
-          </View>
-          <View style={styles['header-action-middle']}>
-            <Icon name="investly" />
-          </View>
-          <View style={styles['header-action-right']}>
-            <Button variant="link" onPress={onMasuk}>
-              Masuk
-            </Button>
           </View>
         </View>
         <Typography style={styles['header-title']} type="heading" size="large">
@@ -167,8 +159,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.neutral100 },
   flex: { flex: 1 },
   'header-action-left': { flex: 1, alignItems: 'flex-start' },
-  'header-action-middle': { flex: 1, alignItems: 'center' },
-  'header-action-right': { flex: 1, alignItems: 'flex-end' },
   'header-action': {
     width: 'auto',
     flexDirection: 'row',
@@ -179,25 +169,16 @@ const styles = StyleSheet.create({
   'header-title': {
     marginHorizontal: 24,
     textAlign: 'center',
-    marginTop: 24,
+    marginTop: 20,
   },
   form: {
     marginHorizontal: 24,
-    gap: 24,
-    marginTop: 32,
-  },
-  'forgot-password': {
-    alignItems: 'flex-start',
-    marginTop: 16,
-    marginHorizontal: 24,
-  },
-  'button-login': {
-    marginHorizontal: 20,
-    marginTop: 24,
+    gap: 16,
+    marginTop: 28,
   },
   'button-register': {
-    marginHorizontal: 20,
-    marginBottom: 44,
+    marginHorizontal: 24,
+    marginBottom: 32,
   },
   'error-message': {
     color: COLORS.red500,
