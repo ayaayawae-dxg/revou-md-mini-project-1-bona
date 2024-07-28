@@ -20,7 +20,6 @@ const useRegister = create<UseRegisterState>(set => ({
     await investlyServices
       .getTopics()
       .then(response => {
-        console.log(response.data.data);
         set(state => ({ topicList: response.data.data }));
       })
       .catch(() => { })
