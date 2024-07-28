@@ -4,9 +4,6 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,8 +13,9 @@ import { COLORS } from '@constant';
 import { Icon, Typography } from '@components/atom';
 import { Button, SimpleTextField, TextField } from '@components/molecules';
 import { useAuth, useFeed } from '@hooks';
+import { RootStackScreenProps } from '@navigation';
 
-type FeedCreateProps = NativeStackScreenProps<RootStackParamList, 'FeedCreate'>;
+type FeedCreateProps = RootStackScreenProps<'FeedCreate'>
 
 type FormData = {
   topic: string;

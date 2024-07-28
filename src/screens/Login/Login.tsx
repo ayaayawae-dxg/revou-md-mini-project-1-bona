@@ -1,6 +1,5 @@
 import React from 'react';
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,8 +9,9 @@ import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { useAuth } from '@hooks';
 import { RevouLogo } from '@assets/images';
+import { RootStackScreenProps } from '@navigation';
 
-type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
+type LoginProps = RootStackScreenProps<'Login'>
 
 type FormData = {
   email: string;
@@ -98,7 +98,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
   const onLewati = () => navigation.navigate('Main');
 
-  const onRegister = () => navigation.navigate('Register');
+  const onRegister = () => navigation.navigate('RegisterStep1');
 
   return (
     <View style={styles['container']}>

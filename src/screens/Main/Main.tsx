@@ -1,14 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { Home, Profile } from '@screens';
 import { Appbar } from '@components/molecules';
 import { MainTab } from '@components/organisms';
 import { useAuth } from '@hooks';
+import { RootStackScreenProps } from '@navigation';
 
-type MainProps = NativeStackScreenProps<RootStackParamList, 'Main'>;
+type MainProps = RootStackScreenProps<'Main'>
 
 const Tab = createBottomTabNavigator();
 

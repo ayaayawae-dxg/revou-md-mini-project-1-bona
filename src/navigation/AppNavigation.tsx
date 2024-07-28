@@ -1,12 +1,18 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { CompositeScreenProps, NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { FeedCreate, FeedDetail, Login, Main, Onboarding } from '@screens';
 import { RegisterNavigation } from '@navigation';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
+export type RootStackScreenProps<T extends keyof RootStackParamList> =
+  CompositeScreenProps<
+    NativeStackScreenProps<RootStackParamList, T>,
+    NativeStackScreenProps<RegisterStackParamList>
+  >;
 
 const AppNavigation = () => {
   return (

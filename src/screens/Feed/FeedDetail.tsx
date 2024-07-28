@@ -1,23 +1,19 @@
 import {
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React from 'react';
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
 
 import { COLORS } from '@constant';
 import { Icon, Typography } from '@components/atom';
 import { Button, TextField } from '@components/molecules';
 import { Feed } from '@components/organisms';
 import { Controller, useForm } from 'react-hook-form';
+import { RootStackScreenProps } from '@navigation';
 
-type FeedDetailProps = NativeStackScreenProps<RootStackParamList, 'FeedDetail'>;
+type FeedDetailProps = RootStackScreenProps<'FeedDetail'>
 
 type FormData = {
   notes: string;
