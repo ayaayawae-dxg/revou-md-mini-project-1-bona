@@ -26,7 +26,7 @@ type RegisterStackParamList = {
 type RootStackParamList = {
   Onboarding: undefined;
   Login: undefined;
-  Register: { screen?: keyof RegisterStackParamList };
+  Register: undefined;
   Main: undefined;
   FeedDetail: FeedProps;
   FeedCreate: undefined;

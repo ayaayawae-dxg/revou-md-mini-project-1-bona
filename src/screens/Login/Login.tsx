@@ -98,7 +98,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
   const onLewati = () => navigation.navigate('Main');
 
-  const onRegister = () => navigation.navigate('RegisterStep1');
+  const onRegister = () => navigation.navigate('Register');
 
   return (
     <View style={styles['container']}>

@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,7 +13,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
-import { useAuth } from '@hooks';
 import { investlyServices } from '@services';
 import { RegisterStackScreenProps } from '@navigation';
 
@@ -57,8 +55,8 @@ const registerSchema: ZodType<FormData> = z
     message: 'Konfirmasi password tidak sesuai',
     path: ['confirmationPassword'],
   });
+
 const RegisterStepOne: React.FC<RegisterStepOneProps> = ({ navigation }) => {
-  const { setUser } = useAuth();
   const {
     control,
     handleSubmit,
@@ -189,7 +187,7 @@ const RegisterStepOne: React.FC<RegisterStepOneProps> = ({ navigation }) => {
       <View style={styles.flex}></View>
 
       <Button
-        disabled={isSubmitting}
+        disabled={!isValid || isSubmitting}
         style={styles['button-register']}
         onPress={handleSubmit(onSubmit)}>
         {isSubmitting ? <ActivityIndicator /> : 'Selanjutnya'}

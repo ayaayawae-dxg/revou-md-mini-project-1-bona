@@ -17,6 +17,10 @@ export type CheckEmailRequest = {
   email: string;
 };
 
+export type GetProfileByUsernameRequest = {
+  username: string;
+};
+
 const login = ({ email, password }: LoginRequest) =>
   axios.post(
     'https://develop.investly.id/api/auth/v2/login',
@@ -50,8 +54,12 @@ const checkEmail = ({ email }: CheckEmailRequest) =>
     },
   );
 
+const getProfileByUsername = ({ username }: GetProfileByUsernameRequest) =>
+  axios.get(`https://develop.investly.id/api/social/v1/public/username/${username}`);
+
 export default {
   login,
   register,
   checkEmail,
+  getProfileByUsername
 };

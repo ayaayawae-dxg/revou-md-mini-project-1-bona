@@ -85,7 +85,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ navigation }) => {
   };
 
   const onScroll = ({ nativeEvent }: { nativeEvent: NativeScrollEvent }) => {
-    const page = Math.round(nativeEvent.contentOffset.x / getScreenWidth());
+    const page = Math.round(nativeEvent.contentOffset.x / getScreenWidth);
     setCurrentStep(page);
   };
 
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   },
   flex: { flex: 1 },
   'item-container': {
-    width: getScreenWidth(),
+    width: getScreenWidth,
     justifyContent: 'center',
     alignItems: 'center',
   },

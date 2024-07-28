@@ -6,93 +6,74 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import _ from 'lodash';
 
 import { Button, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
-import { useAuth } from '@hooks';
 import { investlyServices } from '@services';
 import { RegisterStackScreenProps } from '@navigation';
 
-type RegisterStepTwoProps = RegisterStackScreenProps<'RegisterStep2'>
+type RegisterStepTwoProps = RegisterStackScreenProps<'RegisterStep2'>;
 
 type FormData = {
-  email: string;
-  password: string;
-  confirmationPassword: string;
+  nama: string;
+  username: string;
 };
 
-const registerSchema: ZodType<FormData> = z
-  .object({
-    email: z
-      .string()
-      .min(1, 'Email harus diisi')
-      .trim()
-      .max(254)
-      .regex(
-        /^[^\s()<>[\],;:"\\']+$/,
-        `Email tidak boleh mengandung karakter spesial ( ) < > , ; : " [ ] '`,
-      )
-      .email('Format email tidak sesuai')
-      .toLowerCase(),
-    password: z
-      .string()
-      .min(1, 'Password harus diisi')
-      .min(8, 'Password harus mengandung minimal 8 karakter')
-      .max(64, 'Password harus mengandung maksimal 64 karakter')
-      .regex(/[A-Z]/, 'Password harus mengandung huruf besar')
-      .regex(/[a-z]/, 'Password harus mengandung huruf kecil')
-      .regex(/[0-9]/, 'Password harus mengandung angka')
-      .regex(
-        /[!@#$%^&*(),.?":{}|<>]/,
-        'Password harus mengandung karakter spesial',
-      ),
-    confirmationPassword: z.string(),
-  })
-  .refine(data => data.password === data.confirmationPassword, {
-    message: 'Konfirmasi password tidak sesuai',
-    path: ['confirmationPassword'],
-  });
+const checkUsername = _.debounce(
+  (username: string, callback: (result: boolean) => void) => {
+    investlyServices
+      .getProfileByUsername({ username })
+      .then(response => {
+        const { status } = response.data;
+        callback(status ? false : true);
+      })
+      .catch(error => {
+        const { status } = error.response.data;
+        callback(!status ? true : false);
+      });
+  },
+  500,
+);
+
+const registerSchema: ZodType<FormData> = z.object({
+  nama: z
+    .string()
+    .min(1, 'Nama harus diisi')
+    .min(3, 'Nama harus mengandung minimal 3 karakter')
+    .max(254),
+  username: z
+    .string()
+    .min(1, 'Username harus diisi')
+    .max(254)
+    .refine(async username => {
+      const isUsernameValid = await new Promise(resolve => {
+        checkUsername(username, resolve);
+      });
+      return isUsernameValid;
+    }, 'Username telah terpakai, gunakan username lain'),
+});
 
 const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
-  const { setUser } = useAuth();
   const {
     control,
     handleSubmit,
     formState: { errors, isValid, dirtyFields, isSubmitting },
   } = useForm<FormData>({
     defaultValues: {
-      email: '',
-      password: '',
-      confirmationPassword: '',
+      nama: '',
+      username: '',
     },
     mode: 'all',
     resolver: zodResolver(registerSchema),
   });
 
-  const validateEmail = async (email: string): Promise<Boolean> => {
-    return await investlyServices
-      .checkEmail({ email })
-      .then(response => {
-        const { status } = response.data;
-        return status;
-      })
-      .catch(error => {
-        const { messages } = error.response.data;
-        Alert.alert(messages);
-        return false;
-      });
-  };
-
   const onSubmit = async (data: FormData) => {
-    const isValid = await validateEmail(data.email);
-    if (!isValid) return;
-
-    // navigation.reset({ routes: [{ name: 'Main' }] });
+    navigation.reset({ routes: [{ name: 'RegisterStep3' }] });
   };
 
   const getInputState = (name: keyof FormData) => {
@@ -138,16 +119,16 @@ const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
           rules={{ required: true }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextField
-              state={getInputState('email')}
-              placeholder="Masukkan email kamu"
-              label="Email"
+              state={getInputState('nama')}
+              placeholder="Nama"
+              label="Nama"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              message={errors.email?.message}
+              message={errors.nama?.message}
             />
           )}
-          name="email"
+          name="nama"
         />
 
         <Controller
@@ -155,42 +136,23 @@ const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
           rules={{ required: true }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextField
-              state={getInputState('password')}
-              placeholder="Masukkan password kamu"
-              label="Password"
-              type="password"
+              state={getInputState('username')}
+              placeholder="Username"
+              label="Username"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              message={errors.password?.message}
+              message={errors.username?.message}
             />
           )}
-          name="password"
-        />
-
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextField
-              state={getInputState('confirmationPassword')}
-              placeholder="Masukkan konfirmasi password"
-              label="Konfirmasi Password"
-              type="password"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              message={errors.confirmationPassword?.message}
-            />
-          )}
-          name="confirmationPassword"
+          name="username"
         />
       </View>
 
       <View style={styles.flex}></View>
 
       <Button
-        disabled={isSubmitting}
+        disabled={!isValid || isSubmitting}
         style={styles['button-register']}
         onPress={handleSubmit(onSubmit)}>
         {isSubmitting ? <ActivityIndicator /> : 'Selanjutnya'}
