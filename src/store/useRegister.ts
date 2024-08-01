@@ -21,6 +21,7 @@ type UseRegisterState = {
   selectTopic: (id: string) => void;
   fetchTopicList: () => Promise<BaseResponse>;
   registerUser: () => Promise<BaseResponse>;
+  validateEmail: (email: string) => Promise<BaseResponse>;
 };
 
 const useRegister = create<UseRegisterState>((set, get) => ({
@@ -109,6 +110,16 @@ const useRegister = create<UseRegisterState>((set, get) => ({
       set({ isLoading: false });
     }
   },
+  validateEmail: async (email) => {
+    try {
+      const response = await investlyServices.checkEmail({ email })
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return error.response?.data;
+      }
+    }
+  }
 }));
 
 export default useRegister;

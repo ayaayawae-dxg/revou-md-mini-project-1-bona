@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -13,8 +13,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
-import { investlyServices } from '@services';
 import { RegisterStackScreenProps } from '@navigation';
+import { useRegister } from '@store';
 
 type RegisterStepOneProps = RegisterStackScreenProps<'RegisterStep1'>
 
@@ -57,6 +57,8 @@ const registerSchema: ZodType<FormData> = z
   });
 
 const RegisterStepOne: React.FC<RegisterStepOneProps> = ({ navigation }) => {
+  const setStepOne = useRegister((state) => state.setStepOne);
+  const validateEmail = useRegister((state) => state.validateEmail);
   const {
     control,
     handleSubmit,
@@ -71,40 +73,23 @@ const RegisterStepOne: React.FC<RegisterStepOneProps> = ({ navigation }) => {
     resolver: zodResolver(registerSchema),
   });
 
-  const validateEmail = async (email: string): Promise<Boolean> => {
-    return await investlyServices
-      .checkEmail({ email })
-      .then(response => {
-        const { status } = response.data;
-        return status;
-      })
-      .catch(error => {
-        const { messages } = error.response.data;
-        Alert.alert(messages);
-        return false;
-      });
-  };
+  const onSubmit = useCallback(async (data: FormData) => {
+    const result = await validateEmail(data.email);
+    if (!result.status) {
+      return Alert.alert(result.messages);
+    }
 
-  const onSubmit = async (data: FormData) => {
-    const isValid = await validateEmail(data.email);
-    if (!isValid) return;
-
+    setStepOne({ email: data.email, password: data.password });
     navigation.navigate('RegisterStep2');
-  };
+  }, [navigation, setStepOne, validateEmail]);
 
-  const getInputState = (name: keyof FormData) => {
-    if (errors[name]) {
-      return 'negative';
-    }
+  const getInputState = useCallback((name: keyof FormData) => {
+    if (errors[name]) return 'negative';
+    if (dirtyFields[name]) return 'positive';
+  }, [errors, dirtyFields]);
 
-    if (dirtyFields[name]) {
-      return 'positive';
-    }
-  };
-
-  const onBack = () => navigation.navigate('Login');
-
-  const onMasuk = () => navigation.navigate('Login');
+  const onBack = useCallback(() => navigation.navigate('Login'), [navigation]);
+  const onMasuk = useCallback(() => navigation.navigate('Login'), [navigation]);
 
   return (
     <View style={styles['container']}>

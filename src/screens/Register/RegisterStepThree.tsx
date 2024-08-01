@@ -40,7 +40,7 @@ const RegisterStepThree: React.FC<RegisterStepThreeProps> = ({
       return Alert.alert('Gagal Mendaftar', result.messages);
     }
 
-    console.log("go to loginnn")
+    console.log('go to loginnn');
   }, [setStepThree, registerUser, selectedTopics]);
 
   const onBack = useCallback(() => navigation.goBack(), [navigation]);
