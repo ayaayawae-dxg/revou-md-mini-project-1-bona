@@ -16,27 +16,32 @@ import { useRegister } from '@store';
 
 type RegisterStepThreeProps = RegisterStackScreenProps<'RegisterStep3'>;
 
-type FormData = {
-  nama: string;
-  username: string;
-};
-
 const RegisterStepThree: React.FC<RegisterStepThreeProps> = ({
   navigation,
 }) => {
+  const isLoading = useRegister(state => state.isLoading);
   const topicList = useRegister(state => state.topicList);
   const selectedTopics = useRegister(state => state.selectedTopics);
   const fetchTopicList = useRegister(state => state.fetchTopicList);
   const selectTopic = useRegister(state => state.selectTopic);
+  const setStepThree = useRegister(state => state.setStepThree);
+  const registerUser = useRegister(state => state.registerUser);
 
   const isSubmitDisabled = useMemo(
     () => selectedTopics.length !== 3,
     [selectedTopics],
   );
 
-  const onSubmit = async (data: FormData) => {
-    navigation.reset({ routes: [{ name: 'RegisterStep3' }] });
-  };
+  const onSubmit = useCallback(async () => {
+    setStepThree({ favoriteTopics: selectedTopics });
+
+    const result = await registerUser();
+    if (!result.status) {
+      return Alert.alert('Gagal Mendaftar', result.messages);
+    }
+
+    console.log("go to loginnn")
+  }, [setStepThree, registerUser, selectedTopics]);
 
   const onBack = useCallback(() => navigation.goBack(), [navigation]);
 
@@ -91,9 +96,8 @@ const RegisterStepThree: React.FC<RegisterStepThreeProps> = ({
       <Button
         disabled={isSubmitDisabled}
         style={styles['button-register']}
-        onPress={() => {}}>
-        {/* {isSubmitting ? <ActivityIndicator /> : 'Daftar'} */}
-        Daftar
+        onPress={onSubmit}>
+        {isLoading ? <ActivityIndicator /> : 'Daftar'}
       </Button>
     </View>
   );

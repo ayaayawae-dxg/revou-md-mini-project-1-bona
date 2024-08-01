@@ -31,3 +31,9 @@ type RootStackParamList = {
   FeedDetail: FeedProps;
   FeedCreate: undefined;
 };
+
+type BaseResponse = {
+  status: boolean;
+  messages: string;
+  data?: any;
+}
