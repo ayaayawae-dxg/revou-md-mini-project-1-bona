@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -16,11 +15,12 @@ import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { investlyServices } from '@services';
 import { RegisterStackScreenProps } from '@navigation';
+import { useRegister } from '@store';
 
 type RegisterStepTwoProps = RegisterStackScreenProps<'RegisterStep2'>;
 
 type FormData = {
-  nama: string;
+  name: string;
   username: string;
 };
 
@@ -41,7 +41,7 @@ const checkUsername = _.debounce(
 );
 
 const registerSchema: ZodType<FormData> = z.object({
-  nama: z
+  name: z
     .string()
     .min(1, 'Nama harus diisi')
     .min(3, 'Nama harus mengandung minimal 3 karakter')
@@ -59,36 +59,31 @@ const registerSchema: ZodType<FormData> = z.object({
 });
 
 const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
+  const setStepTwo = useRegister((state) => state.setStepTwo);
   const {
     control,
     handleSubmit,
     formState: { errors, isValid, dirtyFields, isSubmitting },
   } = useForm<FormData>({
     defaultValues: {
-      nama: '',
+      name: '',
       username: '',
     },
     mode: 'all',
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = useCallback((data: FormData) => {
+    setStepTwo({ name: data.name, username: data.username })
     navigation.navigate('RegisterStep3');
-  };
+  }, [navigation, setStepTwo]);
 
-  const getInputState = (name: keyof FormData) => {
-    if (errors[name]) {
-      return 'negative';
-    }
+  const getInputState = useCallback((name: keyof FormData) => {
+    if (errors[name]) return 'negative';
+    if (dirtyFields[name]) return 'positive';
+  }, [errors, dirtyFields]);
 
-    if (dirtyFields[name]) {
-      return 'positive';
-    }
-  };
-
-  const onBack = () => navigation.goBack();
-
-  const onMasuk = () => navigation.navigate('Login');
+  const onBack = useCallback(() => navigation.goBack(), [navigation]);
 
   return (
     <View style={styles['container']}>
@@ -111,16 +106,16 @@ const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
           rules={{ required: true }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextField
-              state={getInputState('nama')}
+              state={getInputState('name')}
               placeholder="Nama"
               label="Nama"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              message={errors.nama?.message}
+              message={errors.name?.message}
             />
           )}
-          name="nama"
+          name="name"
         />
 
         <Controller
