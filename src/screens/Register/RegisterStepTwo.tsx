@@ -10,7 +10,7 @@ import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import _ from 'lodash';
 
-import { Button, TextField } from '@components/molecules';
+import { Button, ProgressBar, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { investlyServices } from '@services';
@@ -59,7 +59,7 @@ const registerSchema: ZodType<FormData> = z.object({
 });
 
 const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
-  const setStepTwo = useRegister((state) => state.setStepTwo);
+  const setStepTwo = useRegister(state => state.setStepTwo);
   const {
     control,
     handleSubmit,
@@ -73,15 +73,21 @@ const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = useCallback((data: FormData) => {
-    setStepTwo({ name: data.name, username: data.username })
-    navigation.navigate('RegisterStep3');
-  }, [navigation, setStepTwo]);
+  const onSubmit = useCallback(
+    (data: FormData) => {
+      setStepTwo({ name: data.name, username: data.username });
+      navigation.navigate('RegisterStep3');
+    },
+    [navigation, setStepTwo],
+  );
 
-  const getInputState = useCallback((name: keyof FormData) => {
-    if (errors[name]) return 'negative';
-    if (dirtyFields[name]) return 'positive';
-  }, [errors, dirtyFields]);
+  const getInputState = useCallback(
+    (name: keyof FormData) => {
+      if (errors[name]) return 'negative';
+      if (dirtyFields[name]) return 'positive';
+    },
+    [errors, dirtyFields],
+  );
 
   const onBack = useCallback(() => navigation.goBack(), [navigation]);
 
@@ -138,12 +144,15 @@ const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
 
       <View style={styles.flex}></View>
 
-      <Button
-        disabled={!isValid || isSubmitting}
-        style={styles['button-register']}
-        onPress={handleSubmit(onSubmit)}>
-        {isSubmitting ? <ActivityIndicator /> : 'Selanjutnya'}
-      </Button>
+      <View style={styles.footer}>
+        <ProgressBar step={2} totalSteps={3} style={styles['progress-bar']} />
+        <Button
+          disabled={!isValid || isSubmitting}
+          style={styles['button-register']}
+          onPress={handleSubmit(onSubmit)}>
+          {isSubmitting ? <ActivityIndicator /> : 'Selanjutnya'}
+        </Button>
+      </View>
     </View>
   );
 };
@@ -171,12 +180,18 @@ const styles = StyleSheet.create({
     gap: 16,
     marginTop: 28,
   },
-  'button-register': {
-    marginHorizontal: 24,
-    marginBottom: 32,
-  },
   'error-message': {
     color: COLORS.red500,
     marginTop: 8,
+  },
+  footer: {},
+  'progress-bar': {
+    marginHorizontal: 24,
+    marginTop: 8,
+  },
+  'button-register': {
+    marginHorizontal: 24,
+    marginBottom: 32,
+    marginTop: 12,
   },
 });

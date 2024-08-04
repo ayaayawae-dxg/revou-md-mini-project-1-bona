@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 
-import { Button, TopicItem } from '@components/molecules';
+import { Button, ProgressBar, TopicItem } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { RegisterStackScreenProps } from '@navigation';
@@ -93,12 +93,15 @@ const RegisterStepThree: React.FC<RegisterStepThreeProps> = ({
         />
       </View>
 
-      <Button
-        disabled={isSubmitDisabled}
-        style={styles['button-register']}
-        onPress={onSubmit}>
-        {isLoading ? <ActivityIndicator /> : 'Daftar'}
-      </Button>
+      <View style={styles.footer}>
+        <ProgressBar step={3} totalSteps={3} style={styles['progress-bar']} />
+        <Button
+          disabled={isSubmitDisabled}
+          style={styles['button-register']}
+          onPress={onSubmit}>
+          {isLoading ? <ActivityIndicator /> : 'Daftar'}
+        </Button>
+      </View>
     </View>
   );
 };
@@ -137,6 +140,11 @@ const styles = StyleSheet.create({
   },
   'content-container': {
     gap: 10,
+  },
+  footer: { marginTop: 14 },
+  'progress-bar': {
+    marginHorizontal: 24,
+    marginTop: 8,
   },
   'button-register': {
     marginHorizontal: 24,

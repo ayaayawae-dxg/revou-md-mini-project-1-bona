@@ -10,13 +10,13 @@ import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Button, TextField } from '@components/molecules';
+import { Button, ProgressBar, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { RegisterStackScreenProps } from '@navigation';
 import { useRegister } from '@store';
 
-type RegisterStepOneProps = RegisterStackScreenProps<'RegisterStep1'>
+type RegisterStepOneProps = RegisterStackScreenProps<'RegisterStep1'>;
 
 type FormData = {
   email: string;
@@ -57,8 +57,8 @@ const registerSchema: ZodType<FormData> = z
   });
 
 const RegisterStepOne: React.FC<RegisterStepOneProps> = ({ navigation }) => {
-  const setStepOne = useRegister((state) => state.setStepOne);
-  const validateEmail = useRegister((state) => state.validateEmail);
+  const setStepOne = useRegister(state => state.setStepOne);
+  const validateEmail = useRegister(state => state.validateEmail);
   const {
     control,
     handleSubmit,
@@ -73,20 +73,26 @@ const RegisterStepOne: React.FC<RegisterStepOneProps> = ({ navigation }) => {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = useCallback(async (data: FormData) => {
-    const result = await validateEmail(data.email);
-    if (!result.status) {
-      return Alert.alert(result.messages);
-    }
+  const onSubmit = useCallback(
+    async (data: FormData) => {
+      const result = await validateEmail(data.email);
+      if (!result.status) {
+        return Alert.alert(result.messages);
+      }
 
-    setStepOne({ email: data.email, password: data.password });
-    navigation.navigate('RegisterStep2');
-  }, [navigation, setStepOne, validateEmail]);
+      setStepOne({ email: data.email, password: data.password });
+      navigation.navigate('RegisterStep2');
+    },
+    [navigation, setStepOne, validateEmail],
+  );
 
-  const getInputState = useCallback((name: keyof FormData) => {
-    if (errors[name]) return 'negative';
-    if (dirtyFields[name]) return 'positive';
-  }, [errors, dirtyFields]);
+  const getInputState = useCallback(
+    (name: keyof FormData) => {
+      if (errors[name]) return 'negative';
+      if (dirtyFields[name]) return 'positive';
+    },
+    [errors, dirtyFields],
+  );
 
   const onBack = useCallback(() => navigation.navigate('Login'), [navigation]);
   const onMasuk = useCallback(() => navigation.navigate('Login'), [navigation]);
@@ -171,12 +177,15 @@ const RegisterStepOne: React.FC<RegisterStepOneProps> = ({ navigation }) => {
 
       <View style={styles.flex}></View>
 
-      <Button
-        disabled={!isValid || isSubmitting}
-        style={styles['button-register']}
-        onPress={handleSubmit(onSubmit)}>
-        {isSubmitting ? <ActivityIndicator /> : 'Selanjutnya'}
-      </Button>
+      <View style={styles.footer}>
+        <ProgressBar step={1} totalSteps={3} style={styles['progress-bar']} />
+        <Button
+          disabled={!isValid || isSubmitting}
+          style={styles['button-register']}
+          onPress={handleSubmit(onSubmit)}>
+          {isSubmitting ? <ActivityIndicator /> : 'Selanjutnya'}
+        </Button>
+      </View>
     </View>
   );
 };
@@ -206,12 +215,18 @@ const styles = StyleSheet.create({
     gap: 16,
     marginTop: 24,
   },
-  'button-register': {
-    marginHorizontal: 24,
-    marginBottom: 32,
-  },
   'error-message': {
     color: COLORS.purple200,
     marginTop: 8,
+  },
+  footer: {},
+  'progress-bar': {
+    marginHorizontal: 24,
+    marginTop: 8,
+  },
+  'button-register': {
+    marginHorizontal: 24,
+    marginBottom: 32,
+    marginTop: 12,
   },
 });
