@@ -1,9 +1,4 @@
-import {
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 
 import { COLORS } from '@constant';
@@ -12,16 +7,23 @@ import { Button, TextField } from '@components/molecules';
 import { Feed } from '@components/organisms';
 import { Controller, useForm } from 'react-hook-form';
 import { RootStackScreenProps } from '@navigation';
+import { useFeed } from '@store';
 
-type FeedDetailProps = RootStackScreenProps<'FeedDetail'>
+type FeedDetailProps = RootStackScreenProps<'FeedDetail'>;
 
 type FormData = {
   notes: string;
 };
 
 const FeedDetail: React.FC<FeedDetailProps> = ({ navigation, route }) => {
+  const feedId = route.params.id;
+  const feed = useFeed(
+    state =>
+      state.feedsNew.find(feed => feed.id === feedId) ??
+      state.feedsTrending.find(feed => feed.id === feedId),
+  );
+
   const onBack = () => navigation.goBack();
-  const params = route.params;
   const {
     control,
     handleSubmit,
@@ -49,7 +51,19 @@ const FeedDetail: React.FC<FeedDetailProps> = ({ navigation, route }) => {
       </View>
 
       <ScrollView style={styles['feed-container']}>
-        <Feed {...params} />
+        {feed && <Feed
+          key={feed.id}
+          id={feed.id}
+          avatarUrl={feed.user?.profile_path}
+          createdAt={feed.time}
+          headline={feed.user?.headline}
+          name={feed.user?.name}
+          postComment={feed.total_comments}
+          postContent={feed.content}
+          postHeader={feed.header}
+          postTopic={feed.topic.label}
+          postUpvote={feed.upvotes}
+        />}
       </ScrollView>
 
       <View style={styles['type-area-container']}>
@@ -69,7 +83,11 @@ const FeedDetail: React.FC<FeedDetailProps> = ({ navigation, route }) => {
           />
         </View>
         <View style={styles['send-container']}>
-          <Button disabled={!canSubmit} type="icon-only" icon={<Icon name="paper-plane" />} />
+          <Button
+            disabled={!canSubmit}
+            type="icon-only"
+            icon={<Icon name="paper-plane" />}
+          />
         </View>
       </View>
     </View>

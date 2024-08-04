@@ -10,7 +10,7 @@ import { redirectOnUnauthorized } from '@utils/helper';
 import { useAuth } from '@hooks';
 
 type FeedProps = {
-  id: string
+  id: string;
   createdAt: string;
   avatarUrl: string;
   name: string;
@@ -20,23 +20,24 @@ type FeedProps = {
   postTopic: string;
   postUpvote: number;
   postComment: number;
-}
+};
 
 const Feed: React.FC<FeedProps> = feed => {
   const { user } = useAuth();
-  const navigation: NativeStackNavigationProp<RootStackParamList> = useNavigation();
+  const navigation: NativeStackNavigationProp<RootStackParamList> =
+    useNavigation();
 
   const onPressContent = () => {
-    const isAllowed = redirectOnUnauthorized(user, navigation)
-    if (!isAllowed) return
+    const isAllowed = redirectOnUnauthorized(user, navigation);
+    if (!isAllowed) return;
 
-    navigation.navigate('FeedDetail', { id: feed.id })
-  }
+    navigation.navigate('FeedDetail', { id: feed.id });
+  };
 
   const onPressHeaderAction = () => {
-    const isAllowed = redirectOnUnauthorized(user, navigation)
-    if (!isAllowed) return
-  }
+    const isAllowed = redirectOnUnauthorized(user, navigation);
+    if (!isAllowed) return;
+  };
 
   return (
     <View style={styles['item-container']}>
@@ -51,11 +52,11 @@ const Feed: React.FC<FeedProps> = feed => {
           {feed.headline && (
             <Typography size="small">{feed.headline}</Typography>
           )}
-          <Typography size="xsmall">
-            {feed.createdAt}
-          </Typography>
+          <Typography size="xsmall">{feed.createdAt}</Typography>
         </View>
-        <TouchableOpacity style={styles['item-header-action']} onPress={onPressHeaderAction}>
+        <TouchableOpacity
+          style={styles['item-header-action']}
+          onPress={onPressHeaderAction}>
           <Icon name="ellipsis" width={16} height={16} />
         </TouchableOpacity>
       </View>
