@@ -6,17 +6,16 @@ import { Feed } from '@components/organisms';
 import { useFeed } from '@store';
 import { GetFeedsRequest } from '@services';
 
+const sortBy: GetFeedsRequest['sort_by'] = 'created_at';
+
 const HomeNew = () => {
-  const sortBy: GetFeedsRequest['sort_by'] = useMemo(() => {
-    return 'created_at';
-  }, []);
   const feeds = useFeed(state => state.feedsNew);
   const isLoading = useFeed(state => state.isLoading);
   const onRefreshFeed = useFeed(state => state.onRefreshFeed);
   const fetchMoreFeeds = useFeed(state => state.fetchMoreFeeds);
 
   useEffect(() => {
-    onRefreshFeed({ sort_by: sortBy })
+    onRefreshFeed({ sort_by: sortBy });
   }, [onRefreshFeed]);
 
   return (
