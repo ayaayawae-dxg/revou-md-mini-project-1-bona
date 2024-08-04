@@ -21,15 +21,10 @@ export type GetProfileByUsernameRequest = {
   username: string;
 };
 
-export type GetTopicsResponse = {
-  id: string;
-  file: {
-    name_display: string;
-    full_path: string;
-    size: number;
-    mime_type: string;
-  };
-  label: string;
+export type GetFeedsRequest = {
+  sort_by?: 'engagement' | 'created_at';
+  page?: number;
+  perpage?: number;
 };
 
 const login = ({ email, password }: LoginRequest) =>
@@ -75,10 +70,20 @@ const getTopics = () =>
     `https://develop.investly.id/api/social/v1/public/masterdata/topic`,
   );
 
+const getFeeds = ({
+  page = 1,
+  perpage = 10,
+  sort_by = 'engagement',
+}: GetFeedsRequest) =>
+  axios.get(`https://develop.investly.id/api/social/v2/feed`, {
+    params: { page, perpage, sort_by },
+  });
+
 export default {
   login,
   register,
   checkEmail,
   getProfileByUsername,
-  getTopics
+  getTopics,
+  getFeeds,
 };

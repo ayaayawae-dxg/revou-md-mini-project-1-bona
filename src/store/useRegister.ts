@@ -1,6 +1,17 @@
-import { GetTopicsResponse, investlyServices } from '@services';
+import { investlyServices } from '@services';
 import { AxiosError } from 'axios';
 import { create } from 'zustand';
+
+export type TopicPropsAPI = {
+  id: string;
+  file: {
+    name_display: string;
+    full_path: string;
+    size: number;
+    mime_type: string;
+  };
+  label: string;
+};
 
 type UseRegisterState = {
   email: string;
@@ -11,7 +22,7 @@ type UseRegisterState = {
 
   isLoading: boolean;
 
-  topicList: GetTopicsResponse[];
+  topicList: TopicPropsAPI[];
   selectedTopics: string[];
 
   setStepOne: (data: { email: string; password: string }) => void;

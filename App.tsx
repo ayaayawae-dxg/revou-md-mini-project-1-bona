@@ -4,16 +4,14 @@ import moment from 'moment';
 import 'moment/locale/id';
 
 import { AppNavigation } from '@navigation';
-import { AuthProvider, FeedProvider } from '@hooks';
+import { AuthProvider } from '@hooks';
 
 const App: React.FC = () => {
   moment.locale('id')
-  
+
   return (
     <AuthProvider>
-      <FeedProvider>
-        <AppNavigation />
-      </FeedProvider>
+      <AppNavigation />
     </AuthProvider>
   );
 };

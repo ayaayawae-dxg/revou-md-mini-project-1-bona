@@ -1,35 +1,51 @@
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 import { FeedEndContent } from '@components/molecules';
 import { Feed } from '@components/organisms';
-import { useFeed } from '@hooks';
-import { generateHomeData } from '@utils/helper';
+import { useFeed } from '@store';
+import { GetFeedsRequest } from '@services';
 
 const HomeTrending = () => {
-  const { feedData, setFeedData } = useFeed();
-  const [refreshing, setRefreshing] = useState(false);
-  const trendingData = useMemo(() => {
-    return [...feedData].sort((a, b) => b.post_upvote - a.post_upvote);
-  }, [feedData]);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setFeedData(generateHomeData());
-    setRefreshing(false);
+  const sortBy: GetFeedsRequest['sort_by'] = useMemo(() => {
+    return 'engagement';
   }, []);
+
+  const feeds = useFeed(state => state.feedsTrending);
+  const isLoading = useFeed(state => state.isLoading);
+  const onRefreshFeed = useFeed(state => state.onRefreshFeed);
+  const fetchMoreFeeds = useFeed(state => state.fetchMoreFeeds);
+
+  useEffect(() => {
+    onRefreshFeed({ sort_by: sortBy })
+  }, [onRefreshFeed]);
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={trendingData}
+        data={feeds}
         keyExtractor={(item, index) => item.id}
-        renderItem={({ item }) => {
-          return <Feed key={item.id} {...item} />;
-        }}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
+        refreshing={isLoading}
+        onRefresh={() => onRefreshFeed({ sort_by: sortBy })}
         ListFooterComponent={<FeedEndContent />}
+        onEndReached={() => fetchMoreFeeds({ sort_by: sortBy })}
+        renderItem={({ item }) => {
+          return (
+            <Feed
+              key={item.id}
+              id={item.id}
+              avatarUrl={item.user?.profile_path}
+              createdAt={item.time}
+              headline={item.user?.headline}
+              name={item.user?.name}
+              postComment={item.total_comments}
+              postContent={item.content}
+              postHeader={item.header}
+              postTopic={item.topic.label}
+              postUpvote={item.upvotes}
+            />
+          );
+        }}
       />
     </View>
   );

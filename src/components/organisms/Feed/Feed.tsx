@@ -2,13 +2,25 @@ import React, { memo, useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import moment from 'moment';
 
 import { Avatar, Icon, Label, Typography } from '@components/atom';
-import { COLORS } from '@constant';
 import { FeedActionButton } from '@components/molecules';
-import { useAuth } from '@hooks';
+import { COLORS } from '@constant';
 import { redirectOnUnauthorized } from '@utils/helper';
+import { useAuth } from '@hooks';
+
+type FeedProps = {
+  id: string
+  createdAt: string;
+  avatarUrl: string;
+  name: string;
+  headline: string | null;
+  postHeader: string;
+  postContent: string;
+  postTopic: string;
+  postUpvote: number;
+  postComment: number;
+}
 
 const Feed: React.FC<FeedProps> = feed => {
   const { user } = useAuth();
@@ -18,7 +30,7 @@ const Feed: React.FC<FeedProps> = feed => {
     const isAllowed = redirectOnUnauthorized(user, navigation)
     if (!isAllowed) return
 
-    navigation.navigate('FeedDetail', feed)
+    navigation.navigate('FeedDetail', { id: feed.id })
   }
 
   const onPressHeaderAction = () => {
@@ -26,15 +38,11 @@ const Feed: React.FC<FeedProps> = feed => {
     if (!isAllowed) return
   }
 
-  const relativeTime = useMemo(() => {
-    return moment(feed.created_at).startOf('minute').fromNow()
-  }, [])
-
   return (
     <View style={styles['item-container']}>
       <View style={styles['item-header']}>
         <View style={styles['item-header-avatar']}>
-          <Avatar source={feed.avatar_url} size={'large'} />
+          <Avatar source={feed.avatarUrl} size={'large'} />
         </View>
         <View style={styles['item-header-status']}>
           <Typography size="xsmall" type="heading">
@@ -44,7 +52,7 @@ const Feed: React.FC<FeedProps> = feed => {
             <Typography size="small">{feed.headline}</Typography>
           )}
           <Typography size="xsmall">
-            {relativeTime}
+            {feed.createdAt}
           </Typography>
         </View>
         <TouchableOpacity style={styles['item-header-action']} onPress={onPressHeaderAction}>
@@ -54,11 +62,11 @@ const Feed: React.FC<FeedProps> = feed => {
 
       <TouchableOpacity onPress={onPressContent}>
         <View style={styles['item-content']}>
-          <Typography type="heading">{feed.post_header}</Typography>
-          <Typography numberOfLines={4}>{feed.post_content}</Typography>
+          <Typography type="heading">{feed.postHeader}</Typography>
+          <Typography numberOfLines={4}>{feed.postContent}</Typography>
           <View style={styles['item-content-tags']}>
             <Label variant="tertiary" color="green">
-              {feed.post_topic}
+              {feed.postTopic}
             </Label>
           </View>
         </View>
@@ -67,15 +75,15 @@ const Feed: React.FC<FeedProps> = feed => {
       <View style={styles['item-footer']}>
         <FeedActionButton
           data={[
-            { icon: 'arrow-up', count: feed.post_upvote },
+            { icon: 'arrow-up', count: feed.postUpvote },
             { icon: 'arrow-down' },
           ]}
         />
         <FeedActionButton
-          data={[{ icon: 'comment', count: feed.post_comment }]}
+          data={[{ icon: 'comment', count: feed.postComment }]}
         />
         <FeedActionButton
-          data={[{ icon: 'retweet', count: feed.post_comment }]}
+          data={[{ icon: 'retweet', count: feed.postComment }]}
         />
       </View>
     </View>
