@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '@constant';
 import { Icon, IconName, Typography } from '@components/atom';
 import { redirectOnUnauthorized } from '@utils/helper';
-import { useAuth } from '@hooks';
+import { useAuth } from '@store';
 
 type ButtonProps = {
   icon: IconName;
@@ -18,7 +18,7 @@ type FeedActionButtonProps = {
 };
 
 const FeedActionButton: React.FC<FeedActionButtonProps> = ({ data }) => {
-  const { user } = useAuth();
+  const user = useAuth(state => state.user);
   const navigation: NativeStackNavigationProp<RootStackParamList> = useNavigation();
 
   const onPressAction = () => {

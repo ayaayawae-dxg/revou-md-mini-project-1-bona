@@ -5,7 +5,7 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { COLORS } from '@constant';
 import { Icon, IconName, Typography, TypographyProps } from '@components/atom';
 import { MainTabHint } from '@components/molecules';
-import { AuthContextType, useAuth } from '@hooks';
+import { useAuth } from '@store';
 import { redirectOnUnauthorized } from '@utils/helper';
 
 type TabIconProps = {
@@ -21,12 +21,12 @@ const TabsIcon: TabIconProps[] = [
   { name: 'Profile', icon: 'user', isActionProtected: true },
 ];
 
-const MainTab: React.FC<BottomTabBarProps & AuthContextType> = ({
+const MainTab: React.FC<BottomTabBarProps> = ({
   state,
   descriptors,
   navigation,
-  user
 }) => {
+  const user = useAuth(state => state.user);
 
   return (
     <>

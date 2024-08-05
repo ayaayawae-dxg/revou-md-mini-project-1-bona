@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,9 +8,8 @@ import analytics from '@react-native-firebase/analytics';
 import { Button, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
-import { useAuth } from '@hooks';
-import { RevouLogo } from '@assets/images';
 import { RootStackScreenProps } from '@navigation';
+import { useAuth } from '@store';
 
 type LoginProps = RootStackScreenProps<'Login'>;
 
@@ -46,11 +45,11 @@ const loginSchema: ZodType<FormData> = z.object({
 });
 
 const Login: React.FC<LoginProps> = ({ navigation }) => {
-  const { setUser } = useAuth();
+  const login = useAuth(state => state.login);
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, dirtyFields },
+    formState: { errors, isValid, dirtyFields, isSubmitting },
   } = useForm<FormData>({
     defaultValues: {
       email: '',
@@ -60,40 +59,23 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     resolver: zodResolver(loginSchema),
   });
 
-  const validateLogin = (data: FormData) => {
-    const validEmail = 'bona@test.app';
-    const validPassword = 'TestApp123!';
-    if (data.email === validEmail && data.password === validPassword) {
-      return true;
+  const onSubmit = async (data: FormData) => {
+    const result = await login(data);
+    if (!result.status) {
+      Alert.alert('Login gagal', 'Email atau password salah');
+      return;
     }
 
-    return false;
-  };
-
-  const onSubmit = (data: FormData) => {
-    const isValid = validateLogin(data);
-    if (!isValid) {
-      return Alert.alert('Login gagal', 'Email atau password salah');
-    }
-
-    const userData = {
-      avatar_url: Image.resolveAssetSource(RevouLogo).uri,
-      email: data.email,
-    };
-
-    setUser(userData);
     navigation.reset({ routes: [{ name: 'Main' }] });
   };
 
-  const getInputState = (name: keyof FormData) => {
-    if (errors[name]) {
-      return 'negative';
-    }
-
-    if (dirtyFields[name]) {
-      return 'positive';
-    }
-  };
+  const getInputState = useCallback(
+    (name: keyof FormData) => {
+      if (errors[name]) return 'negative';
+      if (dirtyFields[name]) return 'positive';
+    },
+    [errors, dirtyFields],
+  );
 
   const onBack = useCallback(
     () => navigation.reset({ routes: [{ name: 'Onboarding' }] }),
@@ -173,9 +155,9 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
       <Button
         style={styles['button-login']}
-        disabled={!isValid}
+        disabled={!isValid || isSubmitting}
         onPress={handleSubmit(onSubmit)}>
-        Masuk
+        {isSubmitting ? <ActivityIndicator /> : 'Masuk'}
       </Button>
 
       <View style={styles.flex}></View>

@@ -14,7 +14,7 @@ import { Button, ProgressBar, TopicItem } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { RegisterStackScreenProps } from '@navigation';
-import { useRegister } from '@store';
+import { useAuth, useRegister } from '@store';
 
 type RegisterStepThreeProps = RegisterStackScreenProps<'RegisterStep3'>;
 
@@ -31,6 +31,8 @@ const RegisterStepThree: React.FC<RegisterStepThreeProps> = ({
   const getStepThreeAnalyticsPayload = useRegister(
     state => state.getStepThreeAnalyticsPayload,
   );
+
+  const setToken = useAuth(state => state.setToken);
 
   const isSubmitDisabled = useMemo(
     () => selectedTopics.length !== 3,
@@ -77,7 +79,8 @@ const RegisterStepThree: React.FC<RegisterStepThreeProps> = ({
 
     await displaySuccessNotification();
 
-    console.log('go to loginnn');
+    setToken(result.data.access_token);
+    navigation.reset({ routes: [{ name: 'Main' }] });
   }, [setStepThree, registerUser, selectedTopics, analytics, displaySuccessNotification]);
 
   const onBack = useCallback(() => navigation.goBack(), [navigation]);

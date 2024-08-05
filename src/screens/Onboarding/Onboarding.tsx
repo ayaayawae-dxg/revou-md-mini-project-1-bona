@@ -6,7 +6,13 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { Button } from '@components/molecules';
 import { Dots, Typography } from '@components/atom';
@@ -18,8 +24,9 @@ import {
 import { getScreenWidth } from '@utils/screen';
 import { COLORS } from '@constant';
 import { RootStackScreenProps } from '@navigation';
+import { useAuth } from '@store';
 
-type OnboardingProps = RootStackScreenProps<'Onboarding'>
+type OnboardingProps = RootStackScreenProps<'Onboarding'>;
 
 type StepProps = {
   image: ImageSourcePropType;
@@ -70,31 +77,47 @@ const renderItem = ({ item }: { item: StepProps }) => {
 };
 
 const Onboarding: React.FC<OnboardingProps> = ({ navigation }) => {
+  const getToken = useAuth(state => state.getToken);
   const ref = useRef<FlatList>(null);
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const isLastStep = currentStep === STEPS.length - 1;
+  const isLastStep = useMemo(
+    () => currentStep === STEPS.length - 1,
+    [currentStep],
+  );
 
-  const onNext = () => {
+  const onNext = useCallback(() => {
     if (isLastStep) {
-      return navigation.navigate('Login');
+      navigation.navigate('Login');
+      return;
     }
 
     const nextStep = currentStep + 1;
     ref.current?.scrollToIndex({ index: nextStep, animated: true });
     setCurrentStep(nextStep);
-  };
+  }, [currentStep, isLastStep, navigation]);
 
-  const onScroll = ({ nativeEvent }: { nativeEvent: NativeScrollEvent }) => {
-    const page = Math.round(nativeEvent.contentOffset.x / getScreenWidth);
-    setCurrentStep(page);
-  };
+  const onScroll = useCallback(
+    ({ nativeEvent }: { nativeEvent: NativeScrollEvent }) => {
+      const page = Math.round(nativeEvent.contentOffset.x / getScreenWidth);
+      setCurrentStep(page);
+    },
+    [],
+  );
 
-  const getButtonTextByStep = () => {
-    if (isLastStep) {
-      return 'Get Started';
+  const renderDots = useMemo(() => (
+    <View style={styles.dots}>
+      {STEPS.map((_, index) => (
+        <Dots key={index} active={currentStep === index} />
+      ))}
+    </View>
+  ), [currentStep]);
+
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      navigation.reset({ routes: [{ name: 'Main' }] });
     }
-    return 'Next';
-  };
+  }, [getToken]);
 
   return (
     <View style={styles.container}>
@@ -109,15 +132,11 @@ const Onboarding: React.FC<OnboardingProps> = ({ navigation }) => {
           ref={ref}
           onMomentumScrollEnd={onScroll}
         />
-        <View style={styles.dots}>
-          {Array.from(Array(STEPS.length).keys()).map((item) => (
-            <Dots key={item} active={currentStep === item} />
-          ))}
-        </View>
+        {renderDots}
       </View>
       <View style={styles.flex}></View>
       <Button style={styles.button} onPress={onNext}>
-        {getButtonTextByStep()}
+        {isLastStep ? 'Get Started' : 'Next'}
       </Button>
     </View>
   );
@@ -126,11 +145,15 @@ const Onboarding: React.FC<OnboardingProps> = ({ navigation }) => {
 export default Onboarding;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.neutral100, justifyContent: 'center' },
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.neutral100,
+    justifyContent: 'center',
+  },
   body: {
     alignItems: 'center',
     gap: 24,
-    marginTop: 42
+    marginTop: 42,
   },
   flex: { flex: 1 },
   'item-container': {
@@ -160,6 +183,6 @@ const styles = StyleSheet.create({
   },
   dots: {
     flexDirection: 'row',
-    gap: 4
-  }
+    gap: 4,
+  },
 });

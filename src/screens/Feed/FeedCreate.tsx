@@ -12,7 +12,7 @@ import { faker } from '@faker-js/faker';
 import { COLORS } from '@constant';
 import { Icon, Typography } from '@components/atom';
 import { Button, SimpleTextField, TextField } from '@components/molecules';
-import { useAuth, useFeed } from '@hooks';
+import { useAuth, useFeed } from '@store';
 import { RootStackScreenProps } from '@navigation';
 
 type FeedCreateProps = RootStackScreenProps<'FeedCreate'>
@@ -30,8 +30,9 @@ const feedCreateSchema: ZodType<FormData> = z.object({
 });
 
 const FeedDetail: React.FC<FeedCreateProps> = ({ navigation, route }) => {
-  const { user } = useAuth();
+  const user = useAuth(state => state.user);
   const { setFeedData } = useFeed();
+  
   const {
     control,
     handleSubmit,
@@ -51,7 +52,7 @@ const FeedDetail: React.FC<FeedCreateProps> = ({ navigation, route }) => {
 
   const onSubmit = (data: FormData) => {
     const createdData: FeedProps = {
-      avatar_url: user?.avatar_url || '',
+      avatar_url: user?.profile_path || '',
       id: faker.string.uuid(),
       name: "Bon",
       created_at: new Date(),

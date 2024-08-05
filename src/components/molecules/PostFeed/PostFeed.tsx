@@ -2,20 +2,20 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import React, { memo } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { Controller, useForm } from 'react-hook-form';
 
 import { COLORS } from '@constant';
 import { Avatar, Icon, Typography } from '@components/atom';
 import { TextField } from '@components/molecules';
-import { useAuth } from '@hooks';
+import { useAuth } from '@store';
 import { redirectOnUnauthorized } from '@utils/helper';
-import { Controller, useForm } from 'react-hook-form';
 
 type FormData = {
   notes: string;
 };
 
 const PostFeed = () => {
-  const { user } = useAuth();
+  const user = useAuth(state => state.user);
   const navigation: NativeStackNavigationProp<RootStackParamList> = useNavigation();
   const {
     control,
@@ -51,7 +51,7 @@ const PostFeed = () => {
     <View style={styles['post-feed-container']}>
       <View style={styles['post-feed-card']}>
         <View style={styles['post-feed-card-header']}>
-          <Avatar size="large" source={user ? user.avatar_url : null} />
+          <Avatar size="large" source={user ? user.profile_path : null} />
 
           <TouchableOpacity style={styles['input-wrapper']} onPress={onPressText}>
             <Controller

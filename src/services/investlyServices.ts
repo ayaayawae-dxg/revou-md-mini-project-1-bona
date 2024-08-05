@@ -21,6 +21,10 @@ export type GetProfileByUsernameRequest = {
   username: string;
 };
 
+export type GetProfileDataRequest = {
+  token: string;
+};
+
 export type GetFeedsRequest = {
   sort_by?: 'engagement' | 'created_at';
   page?: number;
@@ -79,6 +83,11 @@ const getFeeds = ({
     params: { page, perpage, sort_by },
   });
 
+const getProfileData = ({ token }: GetProfileDataRequest) =>
+  axios.get(`https://develop.investly.id/api/social/v2/profile`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
 export default {
   login,
   register,
@@ -86,4 +95,5 @@ export default {
   getProfileByUsername,
   getTopics,
   getFeeds,
+  getProfileData,
 };

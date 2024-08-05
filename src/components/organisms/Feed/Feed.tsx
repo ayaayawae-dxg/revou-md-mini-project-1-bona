@@ -7,7 +7,7 @@ import { Avatar, Icon, Label, Typography } from '@components/atom';
 import { FeedActionButton } from '@components/molecules';
 import { COLORS } from '@constant';
 import { redirectOnUnauthorized } from '@utils/helper';
-import { useAuth } from '@hooks';
+import { useAuth } from '@store';
 
 type FeedProps = {
   id: string;

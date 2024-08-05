@@ -6,11 +6,11 @@ import { useNavigation } from '@react-navigation/native';
 import { Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { InvestlyMascot } from '@assets/images';
-import { useAuth } from '@hooks';
+import { useAuth } from '@store';
 import { redirectOnUnauthorized } from '@utils/helper';
 
 const MainTabHint = () => {
-  const { user } = useAuth();
+  const user = useAuth(state => state.user);
   const navigation: NativeStackNavigationProp<RootStackParamList> = useNavigation();
 
   if (user) return null;

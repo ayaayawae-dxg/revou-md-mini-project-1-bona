@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs';
 import { NavigationHelpers, ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { UserPropsAPI } from '@store';
 
 export const generateHomeData = () => {
   const totalData = 100;
@@ -24,7 +25,7 @@ export const generateHomeData = () => {
 };
 
 export const redirectOnUnauthorized = (
-  user: UserAuthProps | null,
+  user: UserPropsAPI | null,
   navigation: NativeStackNavigationProp<RootStackParamList> | NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>,
 ): boolean => {
   if (!user) {

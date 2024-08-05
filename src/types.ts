@@ -1,8 +1,3 @@
-type UserAuthProps = {
-  avatar_url: string;
-  email: string;
-};
-
 type RegisterStackParamList = {
   RegisterStep1: undefined;
   RegisterStep2: undefined;
