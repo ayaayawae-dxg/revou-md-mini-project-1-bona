@@ -1,6 +1,7 @@
 import { investlyServices } from '@services';
 import { AxiosError } from 'axios';
 import { create } from 'zustand';
+import analytics from '@react-native-firebase/analytics';
 
 export type TopicPropsAPI = {
   id: string;
@@ -11,6 +12,14 @@ export type TopicPropsAPI = {
     mime_type: string;
   };
   label: string;
+};
+
+type GetStepThreeAnalyticsPayloadProps = {
+  email: string;
+  name: string;
+  username: string;
+  topic_id: string;
+  topic_name: string;
 };
 
 type UseRegisterState = {
@@ -33,6 +42,7 @@ type UseRegisterState = {
   fetchTopicList: () => Promise<BaseResponse>;
   registerUser: () => Promise<BaseResponse>;
   validateEmail: (email: string) => Promise<BaseResponse>;
+  getStepThreeAnalyticsPayload: () => GetStepThreeAnalyticsPayloadProps;
 };
 
 const useRegister = create<UseRegisterState>((set, get) => ({
@@ -60,7 +70,17 @@ const useRegister = create<UseRegisterState>((set, get) => ({
   selectTopic: (id: string) => {
     set(state => {
       const index = state.selectedTopics.indexOf(id);
+      const analyticsPayload = {
+        email: state.email,
+        name: state.name,
+        username: state.username,
+        topic_id: id,
+        topic_name: state.topicList.find(value => value.id === id)?.label,
+      };
+
       if (index > -1) {
+        analytics().logEvent('click_register_unselect_topic', analyticsPayload);
+
         return {
           selectedTopics: [
             ...state.selectedTopics.slice(0, index),
@@ -68,6 +88,8 @@ const useRegister = create<UseRegisterState>((set, get) => ({
           ],
         };
       } else if (state.selectedTopics.length < 3) {
+        analytics().logEvent('click_register_select_topic', analyticsPayload);
+
         return { selectedTopics: [...state.selectedTopics, id] };
       }
 
@@ -121,16 +143,32 @@ const useRegister = create<UseRegisterState>((set, get) => ({
       set({ isLoading: false });
     }
   },
-  validateEmail: async (email) => {
+  validateEmail: async email => {
     try {
-      const response = await investlyServices.checkEmail({ email })
+      const response = await investlyServices.checkEmail({ email });
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
         return error.response?.data;
       }
     }
-  }
+  },
+  getStepThreeAnalyticsPayload: () => {
+    const state = get();
+    const selectedTopicsObject = state.favoriteTopics
+      .map(favoriteTopicId =>
+        state.topicList.find(topic => topic.id === favoriteTopicId),
+      )
+      .filter((topic): topic is TopicPropsAPI => topic !== undefined);
+
+    return {
+      email: get().email,
+      name: get().name,
+      username: get().username,
+      topic_id: selectedTopicsObject.map(value => value.id.split('-')[0]).join(','),
+      topic_name: selectedTopicsObject.map(value => value.label).join(','),
+    };
+  },
 }));
 
 export default useRegister;

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import analytics from '@react-native-firebase/analytics';
 
 import { Button, ProgressBar, TopicItem } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
@@ -26,6 +27,9 @@ const RegisterStepThree: React.FC<RegisterStepThreeProps> = ({
   const selectTopic = useRegister(state => state.selectTopic);
   const setStepThree = useRegister(state => state.setStepThree);
   const registerUser = useRegister(state => state.registerUser);
+  const getStepThreeAnalyticsPayload = useRegister(
+    state => state.getStepThreeAnalyticsPayload,
+  );
 
   const isSubmitDisabled = useMemo(
     () => selectedTopics.length !== 3,
@@ -35,13 +39,27 @@ const RegisterStepThree: React.FC<RegisterStepThreeProps> = ({
   const onSubmit = useCallback(async () => {
     setStepThree({ favoriteTopics: selectedTopics });
 
+    await analytics().logEvent(
+      'click_register_button_step_3',
+      getStepThreeAnalyticsPayload(),
+    );
+
     const result = await registerUser();
     if (!result.status) {
-      return Alert.alert('Gagal Mendaftar', result.messages);
+      Alert.alert('Gagal Mendaftar', result.messages);
+      await analytics().logEvent('failed_register_account', {
+        ...getStepThreeAnalyticsPayload(),
+        error_message: result.messages,
+      });
+      return;
     }
 
+    await analytics().logEvent(
+      'success_register_account',
+      getStepThreeAnalyticsPayload(),
+    );
     console.log('go to loginnn');
-  }, [setStepThree, registerUser, selectedTopics]);
+  }, [setStepThree, registerUser, selectedTopics, analytics]);
 
   const onBack = useCallback(() => navigation.goBack(), [navigation]);
 

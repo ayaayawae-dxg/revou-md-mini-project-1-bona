@@ -9,6 +9,7 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import analytics from '@react-native-firebase/analytics';
 
 import { Button, ProgressBar, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
@@ -75,15 +76,23 @@ const RegisterStepOne: React.FC<RegisterStepOneProps> = ({ navigation }) => {
 
   const onSubmit = useCallback(
     async (data: FormData) => {
+      await analytics().logEvent('click_register_button_step_1', {
+        email: data.email,
+      });
+
       const result = await validateEmail(data.email);
       if (!result.status) {
-        return Alert.alert(result.messages);
+        await analytics().logEvent('failed_validate_register_email', {
+          email: data.email,
+        });
+        Alert.alert(result.messages);
+        return
       }
 
       setStepOne({ email: data.email, password: data.password });
       navigation.navigate('RegisterStep2');
     },
-    [navigation, setStepOne, validateEmail],
+    [navigation, setStepOne, validateEmail, analytics],
   );
 
   const getInputState = useCallback(

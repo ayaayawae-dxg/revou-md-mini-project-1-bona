@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import analytics from '@react-native-firebase/analytics';
 
 import { Button, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
@@ -11,7 +12,7 @@ import { useAuth } from '@hooks';
 import { RevouLogo } from '@assets/images';
 import { RootStackScreenProps } from '@navigation';
 
-type LoginProps = RootStackScreenProps<'Login'>
+type LoginProps = RootStackScreenProps<'Login'>;
 
 type FormData = {
   email: string;
@@ -94,11 +95,17 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     }
   };
 
-  const onBack = () => navigation.reset({ routes: [{ name: 'Onboarding' }] });
+  const onBack = useCallback(
+    () => navigation.reset({ routes: [{ name: 'Onboarding' }] }),
+    [navigation],
+  );
 
-  const onLewati = () => navigation.navigate('Main');
+  const onLewati = useCallback(() => navigation.navigate('Main'), [navigation]);
 
-  const onRegister = () => navigation.navigate('Register');
+  const onRegister = useCallback(async () => {
+    await analytics().logEvent('click_register_button');
+    navigation.navigate('Register');
+  }, [navigation, analytics]);
 
   return (
     <View style={styles['container']}>

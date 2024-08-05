@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "245729866216",
+    "project_id": "revou-rn-course-62171",
+    "storage_bucket": "revou-rn-course-62171.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:245729866216:android:a00c0d137471e14862f45d",
+        "android_client_info": {
+          "package_name": "com.socialmedia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjotIa14kaCguTeBv9_KOnokZHTaUqh78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

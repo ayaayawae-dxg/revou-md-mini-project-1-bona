@@ -9,6 +9,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import _ from 'lodash';
+import analytics from '@react-native-firebase/analytics';
 
 import { Button, ProgressBar, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
@@ -54,16 +55,31 @@ const registerSchema: ZodType<FormData> = z.object({
       const isUsernameValid = await new Promise(resolve => {
         checkUsername(username, resolve);
       });
+
+      if (!isUsernameValid) {
+        await analytics().logEvent('failed_validate_register_username', {
+          username,
+        });
+      }
+
       return isUsernameValid;
     }, 'Username telah terpakai, gunakan username lain'),
 });
 
 const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
+  const email = useRegister(state => state.email);
   const setStepTwo = useRegister(state => state.setStepTwo);
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, dirtyFields, isSubmitting, isValidating, validatingFields },
+    formState: {
+      errors,
+      isValid,
+      dirtyFields,
+      isSubmitting,
+      isValidating,
+      validatingFields,
+    },
   } = useForm<FormData>({
     defaultValues: {
       name: '',
@@ -74,11 +90,17 @@ const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
   });
 
   const onSubmit = useCallback(
-    (data: FormData) => {
-      setStepTwo({ name: data.name, username: data.username });
+    async (data: FormData) => {
+      const stepTwoData = { name: data.name, username: data.username };
+      setStepTwo(stepTwoData);
+
+      await analytics().logEvent('click_register_button_step_2', {
+        email,
+        ...stepTwoData,
+      });
       navigation.navigate('RegisterStep3');
     },
-    [navigation, setStepTwo],
+    [navigation, email, setStepTwo, analytics],
   );
 
   const getInputState = useCallback(
