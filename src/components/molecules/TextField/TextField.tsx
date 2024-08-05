@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   NativeSyntheticEvent,
   StyleSheet,
   TextInput,
@@ -19,6 +20,7 @@ type TextFieldProps = {
   label?: string;
   message?: string;
   isActionProtected?: boolean;
+  isLoading?: boolean;
 };
 
 const TextField: React.FC<TextFieldProps & TextInputProps> = ({
@@ -31,6 +33,7 @@ const TextField: React.FC<TextFieldProps & TextInputProps> = ({
   onBlur,
   onChangeText,
   value,
+  isLoading = false,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -99,6 +102,7 @@ const TextField: React.FC<TextFieldProps & TextInputProps> = ({
             </View>
           </TouchableOpacity>
         )}
+        {isLoading && <ActivityIndicator style={styles['loading-icon']}/>}
       </View>
       {state === 'negative' && (
         <Typography style={styles.message} type="paragraph" size="small">
@@ -132,6 +136,9 @@ const styles = StyleSheet.create({
     height: 40,
   },
   'password-icon': {
+    marginRight: 16,
+  },
+  'loading-icon': {
     marginRight: 16,
   },
 

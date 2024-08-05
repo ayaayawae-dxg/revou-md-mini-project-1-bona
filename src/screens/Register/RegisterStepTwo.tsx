@@ -63,7 +63,7 @@ const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, dirtyFields, isSubmitting },
+    formState: { errors, isValid, dirtyFields, isSubmitting, isValidating, validatingFields },
   } = useForm<FormData>({
     defaultValues: {
       name: '',
@@ -136,6 +136,7 @@ const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
               onChangeText={onChange}
               value={value}
               message={errors.username?.message}
+              isLoading={validatingFields.username && isValidating}
             />
           )}
           name="username"
@@ -147,7 +148,7 @@ const RegisterStepTwo: React.FC<RegisterStepTwoProps> = ({ navigation }) => {
       <View style={styles.footer}>
         <ProgressBar step={2} totalSteps={3} style={styles['progress-bar']} />
         <Button
-          disabled={!isValid || isSubmitting}
+          disabled={!isValid || isValidating || isSubmitting}
           style={styles['button-register']}
           onPress={handleSubmit(onSubmit)}>
           {isSubmitting ? <ActivityIndicator /> : 'Selanjutnya'}
