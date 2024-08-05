@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import analytics from '@react-native-firebase/analytics';
+import notifee, { AndroidImportance } from '@notifee/react-native';
 
 import { Button, ProgressBar, TopicItem } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
@@ -36,6 +37,21 @@ const RegisterStepThree: React.FC<RegisterStepThreeProps> = ({
     [selectedTopics],
   );
 
+  const displaySuccessNotification = useCallback(async () => {
+    const channelId = await notifee.createChannel({
+      id: 'register-success',
+      name: 'Register Channel',
+      importance: AndroidImportance.HIGH
+    });
+
+    await notifee.displayNotification({
+      title: 'Horrrayy!, Daftar Berhasil!',
+      android: {
+        channelId,
+      },
+    });
+  }, []);
+
   const onSubmit = useCallback(async () => {
     setStepThree({ favoriteTopics: selectedTopics });
 
@@ -58,8 +74,11 @@ const RegisterStepThree: React.FC<RegisterStepThreeProps> = ({
       'success_register_account',
       getStepThreeAnalyticsPayload(),
     );
+
+    await displaySuccessNotification();
+
     console.log('go to loginnn');
-  }, [setStepThree, registerUser, selectedTopics, analytics]);
+  }, [setStepThree, registerUser, selectedTopics, analytics, displaySuccessNotification]);
 
   const onBack = useCallback(() => navigation.goBack(), [navigation]);
 
