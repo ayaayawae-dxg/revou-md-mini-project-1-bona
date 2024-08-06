@@ -79,7 +79,7 @@ const RegisterStepThree: React.FC<RegisterStepThreeProps> = ({
 
     await displaySuccessNotification();
 
-    setToken(result.data.access_token);
+    await setToken(result.data.access_token);
     navigation.reset({ routes: [{ name: 'Main' }] });
   }, [setStepThree, registerUser, selectedTopics, analytics, displaySuccessNotification]);
 

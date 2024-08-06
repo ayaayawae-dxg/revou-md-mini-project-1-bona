@@ -104,20 +104,27 @@ const Onboarding: React.FC<OnboardingProps> = ({ navigation }) => {
     [],
   );
 
-  const renderDots = useMemo(() => (
-    <View style={styles.dots}>
-      {STEPS.map((_, index) => (
-        <Dots key={index} active={currentStep === index} />
-      ))}
-    </View>
-  ), [currentStep]);
+  const renderDots = useMemo(
+    () => (
+      <View style={styles.dots}>
+        {STEPS.map((_, index) => (
+          <Dots key={index} active={currentStep === index} />
+        ))}
+      </View>
+    ),
+    [currentStep],
+  );
 
-  useEffect(() => {
-    const token = getToken();
+  const checkIsLoggedIn = useCallback(async () => {
+    const token = await getToken();
     if (token) {
       navigation.reset({ routes: [{ name: 'Main' }] });
     }
-  }, [getToken]);
+  }, [getToken, navigation]);
+
+  useEffect(() => {
+    checkIsLoggedIn();
+  }, [checkIsLoggedIn]);
 
   return (
     <View style={styles.container}>

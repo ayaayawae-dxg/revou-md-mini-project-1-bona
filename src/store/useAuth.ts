@@ -1,4 +1,4 @@
-import { investlyServices, storageServices } from '@services';
+import { encryptionServices, investlyServices, storageServices } from '@services';
 import { AxiosError } from 'axios';
 import { create } from 'zustand';
 
@@ -46,8 +46,8 @@ type UseAuthState = {
   token: string | null;
   isLoading: boolean;
 
-  setToken: (token: string) => void;
-  getToken: () => string | null | undefined;
+  setToken: (token: string) => Promise<void>;
+  getToken: () => Promise<string | null | undefined>;
   logout: () => void;
   login: (data: { email: string; password: string }) => Promise<BaseResponse>;
   getUserProfile: () => Promise<BaseResponse | undefined>;
@@ -58,18 +58,20 @@ const useAuth = create<UseAuthState>((set, get) => ({
   token: null,
   isLoading: false,
 
-  getToken: () => {
+  getToken: async () => {
     const token = get().token || storageServices.getString('access_token');
     if (token && !get().token) {
       set({ token });
     }
 
-    return token;
+    const decryptedToken = await encryptionServices.decrypt(token as string)
+    return decryptedToken;
   },
 
-  setToken: (token: string) => {
-    storageServices.set('access_token', token);
-    set({ token });
+  setToken: async (token: string) => {
+    const encryptedToken = await encryptionServices.encrypt(token)
+    storageServices.set('access_token', encryptedToken);
+    set({ token: encryptedToken });
   },
 
   login: async ({ email, password }) => {
@@ -98,7 +100,7 @@ const useAuth = create<UseAuthState>((set, get) => ({
     set({ isLoading: true });
 
     try {
-      const token = get().getToken();
+      const token = await get().getToken();
       if (!token) {
         throw new Error('No token found');
       }

@@ -17,6 +17,7 @@ import { Icon, Typography } from '@components/atom';
 import { COLORS } from '@constant';
 import { RootStackScreenProps } from '@navigation';
 import { useAuth } from '@store';
+import { encryptionServices } from '@services';
 
 type LoginProps = RootStackScreenProps<'Login'>;
 
@@ -119,7 +120,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
           password: credentials.password,
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   }, []);
 
   useEffect(() => {
