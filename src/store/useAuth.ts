@@ -88,7 +88,7 @@ const useAuth = create<UseAuthState>((set, get) => ({
       set({ isLoading: false });
     }
   },
-  
+
   logout: () => {
     storageServices.delete('access_token');
     set({ user: null, token: null });
@@ -105,10 +105,10 @@ const useAuth = create<UseAuthState>((set, get) => ({
 
       const response = await investlyServices.getProfileData({ token });
       set({ user: response.data.data });
-      
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
+        get().logout();
         return error.response?.data;
       }
     } finally {
