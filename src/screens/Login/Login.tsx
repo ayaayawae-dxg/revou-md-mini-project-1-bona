@@ -1,9 +1,16 @@
-import React, { useCallback } from 'react';
-import { ActivityIndicator, Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import analytics from '@react-native-firebase/analytics';
+import * as Keychain from 'react-native-keychain';
 
 import { Button, TextField } from '@components/molecules';
 import { Icon, Typography } from '@components/atom';
@@ -45,6 +52,8 @@ const loginSchema: ZodType<FormData> = z.object({
 });
 
 const Login: React.FC<LoginProps> = ({ navigation }) => {
+  const [fingerEnabled, setFingerEnabled] = useState<boolean>(false);
+
   const login = useAuth(state => state.login);
   const {
     control,
@@ -66,6 +75,9 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       return;
     }
 
+    await Keychain.setGenericPassword(data.email, data.password, {
+      accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY,
+    });
     navigation.reset({ routes: [{ name: 'Main' }] });
   };
 
@@ -88,6 +100,31 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     await analytics().logEvent('click_register_button');
     navigation.navigate('Register');
   }, [navigation, analytics]);
+
+  const checkIsFingerAvailable = useCallback(async () => {
+    const savedGenericPassword = await Keychain.getAllGenericPasswordServices();
+    const deviceHasBiometrics = await Keychain.getSupportedBiometryType();
+
+    if (savedGenericPassword.length > 0 && deviceHasBiometrics) {
+      setFingerEnabled(true);
+    }
+  }, [setFingerEnabled]);
+
+  const loginWithFingerprint = useCallback(async () => {
+    try {
+      const credentials = await Keychain.getGenericPassword();
+      if (credentials) {
+        onSubmit({
+          email: credentials.username,
+          password: credentials.password,
+        });
+      }
+    } catch (error) {}
+  }, []);
+
+  useEffect(() => {
+    checkIsFingerAvailable();
+  }, [checkIsFingerAvailable]);
 
   return (
     <View style={styles['container']}>
@@ -150,7 +187,11 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       </View>
 
       <View style={styles['forgot-password']}>
-        <Button variant="link">Lupa Password</Button>
+        {fingerEnabled && (
+          <Button variant="link" onPress={loginWithFingerprint}>
+            Login with fingerprint
+          </Button>
+        )}
       </View>
 
       <Button
