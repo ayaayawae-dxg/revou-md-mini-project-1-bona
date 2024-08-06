@@ -19,7 +19,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Install dependencies
-        run: npm Install
+        run: npm install
 
       - name: Build Android Staging
         run: npm run build-android:staging
