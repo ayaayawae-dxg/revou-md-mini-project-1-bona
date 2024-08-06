@@ -10,8 +10,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "build-android:staging": "ENVFILE=.env.staging && cd android && gradlew clean && gradlew app:assembleRelease",
-    "build-android:prod": "ENVFILE=.env.staging && cd android && gradlew clean && gradlew app:bundleRelease"
+    "build-android:staging": "ENVFILE=.env.staging && cd android && ./gradlew clean && ./gradlew app:assembleRelease",
+    "build-android:prod": "ENVFILE=.env.staging && cd android && ./gradlew clean && ./gradlew app:bundleRelease"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
