@@ -1,4 +1,4 @@
-package com.socialmedia
+package com.socialmedia_revou
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity

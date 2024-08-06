@@ -1,4 +1,4 @@
-package com.socialmedia
+package com.socialmedia_revou
 
 import android.app.Application
 import com.facebook.react.PackageList
