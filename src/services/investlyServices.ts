@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
+import Config from 'react-native-config';
 
 export type LoginRequest = {
   email: string;
@@ -31,9 +32,13 @@ export type GetFeedsRequest = {
   perpage?: number;
 };
 
+const _axios: AxiosInstance = axios.create({
+  baseURL: Config.API_URL,
+});
+
 const login = ({ email, password }: LoginRequest) =>
-  axios.post(
-    'https://develop.investly.id/api/auth/v2/login',
+  _axios.post(
+    `${Config.API_URL}/api/auth/v2/login`,
     { email, password },
     {
       headers: { 'Content-Type': 'application/json' },
@@ -47,8 +52,8 @@ const register = ({
   name,
   username,
 }: RegisterRequest) =>
-  axios.post(
-    'https://develop.investly.id/api/auth/v4/register',
+  _axios.post(
+    `/api/auth/v4/register`,
     { email, password, favorite_topic_ids, name, username },
     {
       headers: { 'Content-Type': 'application/json' },
@@ -56,8 +61,8 @@ const register = ({
   );
 
 const checkEmail = ({ email }: CheckEmailRequest) =>
-  axios.post(
-    'https://develop.investly.id/api/auth/v1/email/check',
+  _axios.post(
+    `/api/auth/v1/email/check`,
     { email },
     {
       headers: { 'Content-Type': 'application/json' },
@@ -65,26 +70,21 @@ const checkEmail = ({ email }: CheckEmailRequest) =>
   );
 
 const getProfileByUsername = ({ username }: GetProfileByUsernameRequest) =>
-  axios.get(
-    `https://develop.investly.id/api/social/v1/public/username/${username}`,
-  );
+  _axios.get(`/api/social/v1/public/username/${username}`);
 
-const getTopics = () =>
-  axios.get(
-    `https://develop.investly.id/api/social/v1/public/masterdata/topic`,
-  );
+const getTopics = () => _axios.get(`/api/social/v1/public/masterdata/topic`);
 
 const getFeeds = ({
   page = 1,
   perpage = 10,
   sort_by = 'engagement',
 }: GetFeedsRequest) =>
-  axios.get(`https://develop.investly.id/api/social/v2/feed`, {
+  _axios.get(`/api/social/v2/feed`, {
     params: { page, perpage, sort_by },
   });
 
 const getProfileData = ({ token }: GetProfileDataRequest) =>
-  axios.get(`https://develop.investly.id/api/social/v2/profile`, {
+  _axios.get(`/api/social/v2/profile`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 

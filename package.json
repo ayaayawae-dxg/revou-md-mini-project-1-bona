@@ -4,11 +4,14 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "SET ENVFILE=.env.staging && react-native run-android",
+    "android:prod": "SET ENVFILE=.env.production && react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "build-android:staging": "SET ENVFILE=.env.staging && cd android && gradlew clean && gradlew app:assembleRelease",
+    "build-android:prod": "SET ENVFILE=.env.staging && cd android && gradlew clean && gradlew app:bundleRelease"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

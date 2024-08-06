@@ -9,6 +9,25 @@
       "client_info": {
         "mobilesdk_app_id": "1:245729866216:android:a00c0d137471e14862f45d",
         "android_client_info": {
+          "package_name": "com.socialmedia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjotIa14kaCguTeBv9_KOnokZHTaUqh78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:245729866216:android:06c64c3949c2061d62f45d",
+        "android_client_info": {
           "package_name": "com.socialmedia_revou"
         }
       },
