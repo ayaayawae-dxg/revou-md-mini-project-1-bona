@@ -102,7 +102,7 @@ const getFeeds = ({
 const getProfileData = () => _axios.get(`/api/social/v2/profile`);
 
 const upvoteFeed = ({ id }: UpvoteFeedRequest) =>
-  _axios.get(`api/social/v2/post/${id}/up-vote`);
+  _axios.post(`api/social/v2/post/${id}/up-vote`);
 
 export default {
   login,

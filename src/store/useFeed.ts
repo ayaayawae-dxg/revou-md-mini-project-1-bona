@@ -1,5 +1,6 @@
 import { GetFeedsRequest, investlyServices } from '@services';
 import { AxiosError } from 'axios';
+import { UpvoteFeedRequest } from 'services/investlyServices';
 import { create } from 'zustand';
 
 export type FeedPropsAPI = {
@@ -66,6 +67,7 @@ type UseFeedState = {
   fetchFeed: (data: GetFeedsRequest) => Promise<BaseResponse>;
   onRefreshFeed: (data: { sort_by: GetFeedsRequest['sort_by'] }) => void;
   fetchMoreFeeds: (data: { sort_by: GetFeedsRequest['sort_by'] }) => void;
+  upvoteFeed: (data: UpvoteFeedRequest) => Promise<BaseResponse>;
 };
 
 const useFeed = create<UseFeedState>((set, get) => ({
@@ -123,6 +125,39 @@ const useFeed = create<UseFeedState>((set, get) => ({
     }
 
     get().fetchFeed({ sort_by });
+  },
+
+  upvoteFeed: async ({ id }) => {
+    const findFeedAndUpdateUpvote = (
+      id: string,
+      type: 'increment' | 'decrement',
+      value: number = 1
+    ) => {
+      const updatedFeedsTrending = get().feedsTrending.map(feed =>
+        feed.id === id
+          ? { ...feed, upvotes: feed.upvotes + (type === 'increment' ? value : -value) }
+          : feed,
+      );
+      const updatedFeedsNew = get().feedsNew.map(feed =>
+        feed.id === id
+          ? { ...feed, upvotes: feed.upvotes + (type === 'increment' ? value : -value) }
+          : feed,
+      );
+      set({ feedsTrending: updatedFeedsTrending, feedsNew: updatedFeedsNew });
+    };
+
+    try {
+      findFeedAndUpdateUpvote(id, 'increment')
+      const response = await investlyServices.upvoteFeed({ id });
+
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        findFeedAndUpdateUpvote(id, 'decrement')
+
+        return error.response?.data;
+      }
+    }
   },
 }));
 

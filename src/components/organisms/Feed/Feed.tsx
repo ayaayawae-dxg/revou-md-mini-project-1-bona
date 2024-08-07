@@ -1,13 +1,14 @@
-import React, { memo, useMemo } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { memo, useCallback, useMemo } from 'react';
+import { Alert, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import analytics from '@react-native-firebase/analytics';
 
 import { Avatar, Icon, Label, Typography } from '@components/atom';
 import { FeedActionButton } from '@components/molecules';
 import { COLORS } from '@constant';
 import { redirectOnUnauthorized } from '@utils/helper';
-import { useAuth } from '@store';
+import { useAuth, useFeed } from '@store';
 
 type FeedProps = {
   id: string;
@@ -24,20 +25,41 @@ type FeedProps = {
 
 const Feed: React.FC<FeedProps> = feed => {
   const { user } = useAuth();
+  const upvoteFeed = useFeed(state => state.upvoteFeed);
   const navigation: NativeStackNavigationProp<RootStackParamList> =
     useNavigation();
 
-  const onPressContent = () => {
+  const handlePress = useCallback((action: () => void) => {
     const isAllowed = redirectOnUnauthorized(user, navigation);
-    if (!isAllowed) return;
+    if (!isAllowed) return
 
-    navigation.navigate('FeedDetail', { id: feed.id });
-  };
+    action();
+  }, [user, navigation]);
 
-  const onPressHeaderAction = () => {
-    const isAllowed = redirectOnUnauthorized(user, navigation);
-    if (!isAllowed) return;
-  };
+  const onPressContent = useCallback(() => {
+    handlePress(() => navigation.navigate('FeedDetail', { id: feed.id }));
+  }, [handlePress, navigation, feed.id]);
+
+  const onPressHeaderAction = useCallback(() => {
+    handlePress(() => { });
+  }, [handlePress]);
+
+  const onPressUpvote = useCallback(() => {
+    handlePress(async () => {
+      analytics().logEvent('click_upvote', {
+        username: user?.username,
+        post_id: feed.id
+      });
+
+      const result = await upvoteFeed({ id: feed.id })
+      if (!result.status) {
+        ToastAndroid.show(result?.messages || "Error Upvote", ToastAndroid.SHORT);
+        return
+      }
+
+      ToastAndroid.show("Success Upvote", ToastAndroid.SHORT)
+    });
+  }, [handlePress, upvoteFeed, feed.id, user?.username]);
 
   return (
     <View style={styles['item-container']}>
@@ -76,7 +98,11 @@ const Feed: React.FC<FeedProps> = feed => {
       <View style={styles['item-footer']}>
         <FeedActionButton
           data={[
-            { icon: 'arrow-up', count: feed.postUpvote },
+            {
+              icon: 'arrow-up',
+              count: feed.postUpvote,
+              iconPress: onPressUpvote,
+            },
             { icon: 'arrow-down' },
           ]}
         />
