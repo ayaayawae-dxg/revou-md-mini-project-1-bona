@@ -40,4 +40,4 @@ jobs:
           firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk \
             --app 1:245729866216:android:06c64c3949c2061d62f45d \
             --groups "QA" \
-            --token ${{ secrets.FIREBASE_TOKEN }}
+            --token "${{ secrets.FIREBASE_TOKEN }}"
