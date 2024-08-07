@@ -10,8 +10,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "build-android-local:staging": "SET ENVFILE=.env.staging && cd android && gradlew clean && gradlew app:assembleRelease",
-    "build-android:staging": "ENVFILE=.env.staging && cd android && ./gradlew clean && ./gradlew app:assembleRelease",
+    "build-android-local:staging": "SET ENVFILE=.env.staging && cd android && gradlew clean && gradlew app:assembleStagingRelease",
+    "build-android:staging": "ENVFILE=.env.staging && cd android && ./gradlew clean && ./gradlew app:assembleStagingRelease",
     "build-android:prod": "ENVFILE=.env.staging && cd android && ./gradlew clean && ./gradlew app:bundleRelease"
   },
   "dependencies": {
