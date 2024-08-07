@@ -31,6 +31,6 @@ jobs:
         run: npm install -g firebase-tools
           firebase \
           appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk \
-          --app 1:245729866216:android:06c64c3949c2061d62f45d
-          --groups "QA" |
+          --app 1:245729866216:android:06c64c3949c2061d62f45d \
+          --groups "QA" \
           --token "1//0gr6oLvzzZG7nCgYIARAAGBASNwF-L9IrjUi4WcToWZT4rPdYL0a0olz7c6PFOj67LyOgApKLsihSUFoMfbvQtwO6fPn4iqnT7A4"
