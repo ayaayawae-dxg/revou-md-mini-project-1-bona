@@ -105,7 +105,7 @@ const useAuth = create<UseAuthState>((set, get) => ({
         throw new Error('No token found');
       }
 
-      const response = await investlyServices.getProfileData({ token });
+      const response = await investlyServices.getProfileData();
       set({ user: response.data.data });
       return response.data;
     } catch (error) {

@@ -1,3 +1,4 @@
+import { encryptionServices, storageServices } from '@services';
 import axios, { AxiosInstance } from 'axios';
 import Config from 'react-native-config';
 
@@ -22,8 +23,8 @@ export type GetProfileByUsernameRequest = {
   username: string;
 };
 
-export type GetProfileDataRequest = {
-  token: string;
+export type UpvoteFeedRequest = {
+  id: string;
 };
 
 export type GetFeedsRequest = {
@@ -35,6 +36,21 @@ export type GetFeedsRequest = {
 const _axios: AxiosInstance = axios.create({
   baseURL: Config.API_URL,
 });
+
+_axios.interceptors.request.use(
+  async config => {
+    const token = storageServices.getString('access_token');
+    const decryptedToken = await encryptionServices.decrypt(token as string);
+    
+    if (decryptedToken) {
+      config.headers.Authorization = `Bearer ${decryptedToken}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
 
 const login = ({ email, password }: LoginRequest) =>
   _axios.post(
@@ -83,10 +99,10 @@ const getFeeds = ({
     params: { page, perpage, sort_by },
   });
 
-const getProfileData = ({ token }: GetProfileDataRequest) =>
-  _axios.get(`/api/social/v2/profile`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+const getProfileData = () => _axios.get(`/api/social/v2/profile`);
+
+const upvoteFeed = ({ id }: UpvoteFeedRequest) =>
+  _axios.get(`api/social/v2/post/${id}/up-vote`);
 
 export default {
   login,
@@ -96,4 +112,5 @@ export default {
   getTopics,
   getFeeds,
   getProfileData,
+  upvoteFeed,
 };
