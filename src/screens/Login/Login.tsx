@@ -190,7 +190,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       <View style={styles['forgot-password']}>
         {fingerEnabled && (
           <Button variant="link" onPress={loginWithFingerprint}>
-            Login With Fingerprint
+            Login with fingerprint
           </Button>
         )}
       </View>
