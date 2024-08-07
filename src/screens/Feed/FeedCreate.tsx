@@ -1,21 +1,23 @@
 import {
+  ActivityIndicator,
   StyleSheet,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { faker } from '@faker-js/faker';
+import analytics from '@react-native-firebase/analytics';
 
 import { COLORS } from '@constant';
 import { Icon, Typography } from '@components/atom';
-import { Button, SimpleTextField, TextField } from '@components/molecules';
-import { useAuth, useFeed } from '@store';
+import { Button, Select, SimpleTextField } from '@components/molecules';
+import { useAuth, useFeed, useTopic } from '@store';
 import { RootStackScreenProps } from '@navigation';
 
-type FeedCreateProps = RootStackScreenProps<'FeedCreate'>
+type FeedCreateProps = RootStackScreenProps<'FeedCreate'>;
 
 type FormData = {
   topic: string;
@@ -31,13 +33,19 @@ const feedCreateSchema: ZodType<FormData> = z.object({
 
 const FeedDetail: React.FC<FeedCreateProps> = ({ navigation, route }) => {
   const user = useAuth(state => state.user);
-  const { setFeedData } = useFeed();
-  
+  const topics = useTopic(state => state.topics);
+  const fetchTopic = useTopic(state => state.fetchTopic);
+  const createFeed = useFeed(state => state.createFeed);
+
+  const topicList = useMemo(() => {
+    return topics.map(topic => ({ label: topic.label, value: topic.id }));
+  }, [topics]);
+
   const {
     control,
     handleSubmit,
     watch,
-    formState: { errors, isValid, dirtyFields },
+    formState: { errors, isValid, isSubmitting, dirtyFields },
   } = useForm<FormData>({
     defaultValues: {
       topic: '',
@@ -48,25 +56,43 @@ const FeedDetail: React.FC<FeedCreateProps> = ({ navigation, route }) => {
     resolver: zodResolver(feedCreateSchema),
   });
 
-  const onBack = () => navigation.goBack();
+  const onBack = useCallback(() => navigation.goBack(), [navigation]);
 
-  const onSubmit = (data: FormData) => {
-    const createdData: FeedProps = {
-      avatar_url: user?.profile_path || '',
-      id: faker.string.uuid(),
-      name: "Bon",
-      created_at: new Date(),
-      post_header: data.judul,
-      post_content: data.deskripsi,
-      post_topic: data.topic,
-      post_upvote: 0,
-      post_downvote: 0,
-      post_comment: 0
-    }
+  const onSubmit = useCallback(
+    async (data: FormData) => {
+      const result = await createFeed({
+        content: data.deskripsi,
+        header: data.judul,
+        topic_id: data.topic,
+        is_anonim: 'false',
+      });
+      if (!result.status) {
+        await analytics().logEvent('Failed_create_post', {
+          username: user?.username,
+          email: user?.email,
+          error_message: result.messages,
+        });
+        ToastAndroid.show(
+          result.messages || 'Failed Create Post',
+          ToastAndroid.SHORT,
+        );
+        return;
+      }
 
-    setFeedData(prev => [...prev, createdData]);
-    navigation.goBack();
-  };
+      await analytics().logEvent('Success_create_post', {
+        username: user?.username,
+        email: user?.email,
+      });
+      ToastAndroid.show('Success Create Post', ToastAndroid.SHORT);
+
+      navigation.reset({ routes: [{ name: 'Main' }] });
+    },
+    [createFeed, navigation],
+  );
+
+  useEffect(() => {
+    fetchTopic();
+  }, [fetchTopic]);
 
   return (
     <View style={styles['container']}>
@@ -85,9 +111,9 @@ const FeedDetail: React.FC<FeedCreateProps> = ({ navigation, route }) => {
           <Button
             size="small"
             style={styles['header-action-button']}
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
             onPress={handleSubmit(onSubmit)}>
-            Post
+            {isSubmitting ? <ActivityIndicator /> : 'Post'}
           </Button>
         </View>
       </View>
@@ -97,12 +123,11 @@ const FeedDetail: React.FC<FeedCreateProps> = ({ navigation, route }) => {
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextField
-                state="default-no-label"
-                placeholder="Topic"
-                onBlur={onBlur}
-                onChangeText={onChange}
+              <Select
+                placeholder="Select a topic..."
+                onValueChange={onChange}
                 value={value}
+                items={topicList}
               />
             )}
             name="topic"

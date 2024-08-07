@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import { create } from 'zustand';
 import analytics from '@react-native-firebase/analytics';
 
-export type TopicPropsAPI = {
+type TopicPropsAPI = {
   id: string;
   file: {
     name_display: string;
@@ -123,18 +123,6 @@ const useRegister = create<UseRegisterState>((set, get) => ({
 
       const response = await investlyServices.register(payload);
       return response.data;
-
-      // {
-      //   data: {
-      //     access_token:
-      //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjI1MzExNzMsImlhdCI6MTcyMjUyNzU3MywiaXNzIjoiaW52ZXN0bHkiLCJuYmYiOjE3MjI1Mjc1NzMsInN1YiI6ImZmOTI3Y2MzLWFlMzMtNDg2Mi04NGMwLTI0ZTYyZjBiZmYwYyJ9.IiugzEjVLNDSA_6UqQ_o9Pxqm4m8Ae8_rTVhKEQ2MV4',
-      //     expired_at: '2024-08-01T16:52:54Z',
-      //     is_verified: true,
-      //     refresh_token: 'ipSIcfKjpyRMtmOUxzcjFxdDceVQkumwqzDGENwATfUdBSSc',
-      //   },
-      //   messages: 'Berhasil register',
-      //   status: true,
-      // }
     } catch (error) {
       if (error instanceof AxiosError) {
         return error.response?.data;

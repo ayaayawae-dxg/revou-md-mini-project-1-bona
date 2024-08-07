@@ -33,6 +33,13 @@ export type GetFeedsRequest = {
   perpage?: number;
 };
 
+export type CreateFeedRequest = {
+  content: string;
+  header: string;
+  is_anonim: 'true' | 'false';
+  topic_id: string;
+};
+
 const _axios: AxiosInstance = axios.create({
   baseURL: Config.API_URL,
 });
@@ -41,7 +48,7 @@ _axios.interceptors.request.use(
   async config => {
     const token = storageServices.getString('access_token');
     const decryptedToken = await encryptionServices.decrypt(token as string);
-    
+
     if (decryptedToken) {
       config.headers.Authorization = `Bearer ${decryptedToken}`;
     }
@@ -104,13 +111,21 @@ const getProfileData = () => _axios.get(`/api/social/v2/profile`);
 const upvoteFeed = ({ id }: UpvoteFeedRequest) =>
   _axios.post(`api/social/v2/post/${id}/up-vote`);
 
+const createFeed = (data: FormData) =>
+  _axios.post(`/api/social/v2/post`, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
 export default {
   login,
   register,
   checkEmail,
-  getProfileByUsername,
-  getTopics,
-  getFeeds,
   getProfileData,
+  getProfileByUsername,
+
+  getTopics,
+
+  getFeeds,
   upvoteFeed,
+  createFeed,
 };

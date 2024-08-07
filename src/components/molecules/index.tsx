@@ -9,3 +9,4 @@ export { default as MainTabHint } from './MainTabHint/MainTabHint';
 export { default as SimpleTextField } from './SimpleTextField/SimpleTextField';
 export { default as TopicItem } from './TopicItem/TopicItem';
 export { default as ProgressBar } from './ProgressBar/ProgressBar';
+export { default as Select } from './Select/Select';

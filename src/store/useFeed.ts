@@ -1,6 +1,6 @@
 import { GetFeedsRequest, investlyServices } from '@services';
 import { AxiosError } from 'axios';
-import { UpvoteFeedRequest } from 'services/investlyServices';
+import { CreateFeedRequest, UpvoteFeedRequest } from 'services/investlyServices';
 import { create } from 'zustand';
 
 export type FeedPropsAPI = {
@@ -68,6 +68,7 @@ type UseFeedState = {
   onRefreshFeed: (data: { sort_by: GetFeedsRequest['sort_by'] }) => void;
   fetchMoreFeeds: (data: { sort_by: GetFeedsRequest['sort_by'] }) => void;
   upvoteFeed: (data: UpvoteFeedRequest) => Promise<BaseResponse>;
+  createFeed: (data: CreateFeedRequest) => Promise<BaseResponse>;
 };
 
 const useFeed = create<UseFeedState>((set, get) => ({
@@ -157,6 +158,26 @@ const useFeed = create<UseFeedState>((set, get) => ({
 
         return error.response?.data;
       }
+    }
+  },
+
+  createFeed: async ({ content, header, is_anonim, topic_id }: CreateFeedRequest) => {
+    set({ isLoading: true });
+    try {
+      let data = new FormData();
+      data.append('content', content);
+      data.append('header', header);
+      data.append('is_anonim', is_anonim);
+      data.append('topic_id', topic_id);
+
+      const response = await investlyServices.createFeed(data);
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return error.response?.data || error.message;
+      }
+    } finally {
+      set({ isLoading: false });
     }
   },
 }));

@@ -109,8 +109,8 @@ const useAuth = create<UseAuthState>((set, get) => ({
       set({ user: response.data.data });
       return response.data;
     } catch (error) {
+      get().logout();
       if (error instanceof AxiosError) {
-        get().logout();
         return error.response?.data;
       }
     } finally {
