@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
+    "build-android-local:staging": "SET ENVFILE=.env.staging && cd android && gradlew clean && gradlew app:assembleRelease",
     "build-android:staging": "ENVFILE=.env.staging && cd android && ./gradlew clean && ./gradlew app:assembleRelease",
     "build-android:prod": "ENVFILE=.env.staging && cd android && ./gradlew clean && ./gradlew app:bundleRelease"
   },
@@ -29,6 +30,7 @@
     "react-hook-form": "^7.52.1",
     "react-native": "0.74.3",
     "react-native-aes-crypto": "^3.0.3",
+    "react-native-code-push": "^8.3.1",
     "react-native-config": "^1.5.3",
     "react-native-keychain": "^8.2.0",
     "react-native-mmkv": "^2.12.2",

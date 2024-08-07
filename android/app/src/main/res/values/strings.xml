@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Social Media</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">E911HcYnhR_CGaouvmSypaZt-rrJEnvZJkXnH</string>
 </resources>
